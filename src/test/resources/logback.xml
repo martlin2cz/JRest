@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{dd.MM.yyyy HH:mm:ss} [%level] from %logger{15} in %thread: %n - %message%n%xException{10}</pattern>
+		</encoder>
+	</appender>
+
+	<root level="TRACE">
+		<appender-ref ref="CONSOLE" />
+	</root>
+</configuration>
