@@ -5,35 +5,54 @@ import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.CommunicationProtocol;
 
+/**
+ * Represents base input entry for {@link JRestWaiter}. Creates and runs waiter,
+ * <strong>but in separate thread</strong>.
+ * 
+ * @author martin
+ *
+ */
 public class JRestWaiterStarter {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final JRestWaiter waiter;
-	private final DaemonThread daemon;
+	private final WaiterThread thread;
 	private final WaiterRunnable body;
 
+	/**
+	 * Creates instance with given protocol and commands processor.
+	 * 
+	 * @param protocol
+	 * @param processor
+	 */
 	public JRestWaiterStarter(CommunicationProtocol protocol, CommandProcessor processor) {
 		waiter = new JRestWaiter(protocol, processor);
 		body = new WaiterRunnable(waiter);
-		daemon = new DaemonThread(body);
+		thread = new WaiterThread(body);
 	}
 
-	public void startWaiting() {
+	/**
+	 * Starts waiter.
+	 */
+	public void startWaiter() {
+		log.debug("Waiter starting..");
 
-		//daemon.setDaemon(false);// XXX debug!
+		thread.start();
 
-		daemon.start();
 		log.info("Waiter started");
 	}
 
-	public void exit() {
-		System.out.println("Waiter exiting...");
+	/**
+	 * Stops waiter.
+	 */
+	public void stopWaiter() {
+		log.debug("Waiter stopping..");
 
-		waiter.interrupt();
-		daemon.interrupt();
+		waiter.stopWaiter();
+		thread.interrupt();
 
 		try {
-			daemon.join();
+			thread.join();
 		} catch (InterruptedException e) {
 		}
 

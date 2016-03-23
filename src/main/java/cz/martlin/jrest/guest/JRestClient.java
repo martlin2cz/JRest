@@ -11,18 +11,34 @@ import org.slf4j.LoggerFactory;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.misc.Tools;
 
+/**
+ * Encapsulates Java Socket API on client side.
+ * @author martin
+ *
+ */
 public class JRestClient {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final int port;
 	private final String host;
 
+	/**
+	 * Creates client which connects to server on given host and port.
+	 * @param port
+	 * @param host
+	 */
 	public JRestClient(int port, String host) {
 		super();
 		this.port = port;
 		this.host = host;
 	}
 
+	/**
+	 * Sends given string data to server and returns server's response.
+	 * @param string
+	 * @return
+	 * @throws JRestException
+	 */
 	public String send(String string) throws JRestException {
 		Socket sock = null;
 

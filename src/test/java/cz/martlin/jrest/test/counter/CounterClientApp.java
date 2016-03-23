@@ -5,6 +5,14 @@ import java.util.Random;
 import cz.martlin.jrest.guest.JRestGuest;
 import cz.martlin.jrest.misc.JRestException;
 
+/**
+ * The client application of counter. Connects creates guest and sends some
+ * commands to waiter (waiter must be started by running {@link CounterAppEntry}
+ * ).
+ * 
+ * @author martin
+ *
+ */
 public class CounterClientApp {
 
 	private static final int COUNT = 20;

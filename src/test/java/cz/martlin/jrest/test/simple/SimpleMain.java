@@ -5,6 +5,13 @@ import cz.martlin.jrest.misc.CommunicationProtocol;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.waiter.JRestWaiterStarter;
 
+/**
+ * The simpliest examples of usage. Both waiter and guest are started in one
+ * application (so, the practical pruposes are minimal).
+ * 
+ * @author martin
+ *
+ */
 public class SimpleMain {
 
 	public static void main(String[] args) throws JRestException, InterruptedException {
@@ -13,7 +20,7 @@ public class SimpleMain {
 		SimpleProcessor processor = new SimpleProcessor();
 
 		JRestWaiterStarter starter = new JRestWaiterStarter(protocol, processor);
-		starter.startWaiting();
+		starter.startWaiter();
 
 		Thread.sleep(100);
 

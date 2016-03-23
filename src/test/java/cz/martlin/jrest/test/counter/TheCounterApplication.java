@@ -1,5 +1,11 @@
 package cz.martlin.jrest.test.counter;
 
+/**
+ * Our simple application.
+ * 
+ * @author martin
+ *
+ */
 public class TheCounterApplication {
 
 	private int counter;
@@ -22,6 +28,24 @@ public class TheCounterApplication {
 	@Override
 	public String toString() {
 		return "TheCounterApplication [counter=" + counter + "]";
+	}
+
+	public void doSomething() {
+		System.out.println("The app is running and now will next 10 seconds");
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+		}
+		System.out.println("The app is still running, the counter is now: " + counter);
+	}
+
+	public void doSomethingElse() {
+		System.out.println("The will now do something which takes exactly two seconds to compute.");
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+		}
+		System.out.println("It has computed something, the counter is now " + counter);
 	}
 
 }

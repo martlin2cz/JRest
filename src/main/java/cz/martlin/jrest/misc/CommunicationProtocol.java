@@ -1,5 +1,11 @@
 package cz.martlin.jrest.misc;
 
+/**
+ * Represents protocal of communication between guest and waiter.
+ * 
+ * @author martin
+ *
+ */
 public class CommunicationProtocol {
 
 	private static final String DFLT_EXIT_COMMAND = "quit";
@@ -8,6 +14,13 @@ public class CommunicationProtocol {
 	private final String serverHost;
 	private final String exitCommand;
 
+	/**
+	 * Creates protocol with given port, host of server and command to exit.
+	 * 
+	 * @param port
+	 * @param serverHost
+	 * @param exitCommand
+	 */
 	public CommunicationProtocol(int port, String serverHost, String exitCommand) {
 		super();
 		this.port = port;
@@ -15,6 +28,13 @@ public class CommunicationProtocol {
 		this.exitCommand = exitCommand;
 	}
 
+	/**
+	 * Creates protocol with given port, host of server and default command to
+	 * exit ( {@value #DFLT_EXIT_COMMAND} ).
+	 * 
+	 * @param port
+	 * @param serverHost
+	 */
 	public CommunicationProtocol(int port, String serverHost) {
 		super();
 		this.port = port;
@@ -22,6 +42,13 @@ public class CommunicationProtocol {
 		this.exitCommand = DFLT_EXIT_COMMAND;
 	}
 
+	/**
+	 * Creates protocol with given port and default server host (
+	 * {@value #DFLT_SERVER_HOST} ) and exit command (
+	 * {@value #DFLT_EXIT_COMMAND} ).
+	 * 
+	 * @param port
+	 */
 	public CommunicationProtocol(int port) {
 		super();
 		this.port = port;

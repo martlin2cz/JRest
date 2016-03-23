@@ -13,13 +13,25 @@ import org.slf4j.LoggerFactory;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.misc.Tools;
 
+/**
+ * Encapsulates Java Socket API on server side.
+ * 
+ * @author martin
+ *
+ */
 public class JRestServer {
+
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final int port;
-
 	private final ServerSocket server;
 
+	/**
+	 * Creates and starts server listening on given port.
+	 * 
+	 * @param port
+	 * @throws JRestException
+	 */
 	public JRestServer(int port) throws JRestException {
 		super();
 		this.port = port;
@@ -28,6 +40,12 @@ public class JRestServer {
 
 	}
 
+	/**
+	 * Starts server
+	 * 
+	 * @return
+	 * @throws JRestException
+	 */
 	private ServerSocket startServer() throws JRestException {
 		ServerSocket server = null;
 		try {
@@ -39,6 +57,12 @@ public class JRestServer {
 		}
 	}
 
+	/**
+	 * Waits to next connection. Then processes the incame request with given
+	 * processor.
+	 * 
+	 * @param processor
+	 */
 	public void awaitAndProcess(CommandProcessor processor) {
 		Socket sock = null;
 		try {
@@ -54,6 +78,14 @@ public class JRestServer {
 		}
 	}
 
+	/**
+	 * Processes given command with given processor.
+	 * 
+	 * @param sock
+	 * @param processor
+	 * @throws IOException
+	 * @throws JRestException
+	 */
 	private void processCommand(Socket sock, CommandProcessor processor) throws IOException, JRestException {
 		InputStream ins = sock.getInputStream();
 		String command = Tools.read(ins);
@@ -73,6 +105,9 @@ public class JRestServer {
 		Tools.write(ous, response);
 	}
 
+	/**
+	 * Finishes work of server.
+	 */
 	public void finishServer() {
 		IOUtils.closeQuietly(server);
 		log.debug("Server stopped");

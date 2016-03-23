@@ -1,5 +1,10 @@
 package cz.martlin.jrest.misc;
 
+/**
+ * Represents Exception during the JRest process.
+ * @author martin
+ *
+ */
 public class JRestException extends Exception {
 
 	private static final long serialVersionUID = -8888111689187705931L;

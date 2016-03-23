@@ -7,6 +7,11 @@ import java.io.ByteArrayOutputStream;
 
 import org.junit.Test;
 
+/**
+ * Test of {@link Tools} class.
+ * @author martin
+ *
+ */
 public class ToolsTest {
 
 	@Test

@@ -2,6 +2,14 @@ package cz.martlin.jrest.test.counter;
 
 import cz.martlin.jrest.waiter.CommandProcessor;
 
+/**
+ * Processor of commands of counter app. Avaiable commands to use are
+ * "increment" or "decrement" (in theese cases responds new value of counter),
+ * else does nothing and returns "-" as repose.
+ * 
+ * @author martin
+ *
+ */
 public class CounterCommandsProcessor implements CommandProcessor {
 
 	private final TheCounterApplication app;
