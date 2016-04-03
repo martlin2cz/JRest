@@ -1,18 +1,19 @@
 package cz.martlin.jrest.guest;
 
-import cz.martlin.jrest.misc.CommunicationProtocol;
 import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.protocol.GuestProtocol;
+import cz.martlin.jrest.protocol.JRestRequest;
+import cz.martlin.jrest.protocol.JRestResponse;
 
 /**
- * Guest in JRest restaurant, who sends commands to its waiter. Optionally,
- * guest can waiter stop.
+ * Guest in JRest restaurant, who sends commands to its waiter.
  * 
  * @author martin
  *
  */
 public class JRestGuest {
 
-	private final CommunicationProtocol protocol;
+	private final GuestProtocol protocol;
 	private final JRestClient client;
 
 	/**
@@ -20,29 +21,17 @@ public class JRestGuest {
 	 * 
 	 * @param protocol
 	 */
-	public JRestGuest(CommunicationProtocol protocol) {
+	public JRestGuest(GuestProtocol protocol) {
 		this.protocol = protocol;
-		this.client = new JRestClient(protocol.getPort(), protocol.getServerHost());
+		this.client = new JRestClient(protocol.getPort(), protocol.getWaiterHost());
 	}
 
-	/**
-	 * Sends given "command" (whathever string data which can server handle).
-	 * 
-	 * @param command
-	 * @return
-	 * @throws JRestException
-	 */
-	public String sendCommand(String command) throws JRestException {
-		return client.send(command);
-	}
+	public JRestResponse sendCommand(JRestRequest command) throws JRestException {
+		String req = protocol.getRequestSerializer().serializeRequest(command);
 
-	/**
-	 * Sends command to waiter stop.
-	 * 
-	 * @throws JRestException
-	 */
-	public void stopWaiter() throws JRestException {
-		sendCommand(protocol.getExitCommand());
+		String resp = client.send(req);
+
+		return protocol.getReponseDeserializer().deserializeResponse(resp);
 	}
 
 }

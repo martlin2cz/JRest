@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import cz.martlin.jrest.misc.CommunicationProtocol;
 import cz.martlin.jrest.misc.Interruptable;
 import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.protocol.WaiterProtocol;
 
 /**
  * Represents waiter in JRest. The waiter accepts and processes commands from
@@ -17,8 +18,8 @@ import cz.martlin.jrest.misc.JRestException;
 public class JRestWaiter implements Interruptable {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final CommunicationProtocol protocol;
-	private final CommandProcessor exitProcessor;
+	private final WaiterProtocol protocol;
+	//private final CommandProcessor exitProcessor;
 
 	private boolean interrupted;
 
@@ -29,9 +30,9 @@ public class JRestWaiter implements Interruptable {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiter(CommunicationProtocol protocol, CommandProcessor processor) {
+	public JRestWaiter(WaiterProtocol protocol) {
 		this.protocol = protocol;
-		this.exitProcessor = new WrappingExitCmdProcessor(protocol, processor, this);
+		//this.exitProcessor = new WrappingExitCmdProcessor(protocol, processor, this);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class JRestWaiter implements Interruptable {
 			return;
 		}
 
-		runServer(exitProcessor, server);
+		runServer(protocol.getProcessor(), server);
 
 		server.finishServer();
 	}

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.CommunicationProtocol;
+import cz.martlin.jrest.protocol.WaiterProtocol;
 
 /**
  * Represents base input entry for {@link JRestWaiter}. Creates and runs waiter,
@@ -25,8 +26,8 @@ public class JRestWaiterStarter {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiterStarter(CommunicationProtocol protocol, CommandProcessor processor) {
-		waiter = new JRestWaiter(protocol, processor);
+	public JRestWaiterStarter(WaiterProtocol protocol) {
+		waiter = new JRestWaiter(protocol);
 		body = new WaiterRunnable(waiter);
 		thread = new WaiterThread(body);
 	}

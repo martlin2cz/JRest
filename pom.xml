@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.martlin</groupId>
 	<artifactId>JRest</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<name>JRest, simple IPC</name>
 	<description>Very simple framework to handle IPC between "server" (Waiter, the main application) and at least one "client" (Guest, the commander(s)) applications</description>
 

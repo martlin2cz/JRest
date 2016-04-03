@@ -12,7 +12,7 @@ public class WaiterThread extends Thread implements Interruptable {
 
 	public WaiterThread(WaiterRunnable body) {
 		super(body, "WaiterT");
-		setDaemon(true);
+//		setDaemon(true);
 	}
 
 }

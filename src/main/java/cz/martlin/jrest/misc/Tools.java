@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Some tools class.
@@ -47,4 +49,18 @@ public class Tools {
 			throw new JRestException("Cannot write output");
 		}
 	}
+
+	// XXX
+	// public static String replaceAll(String input, String regex, int group) {
+	// StringBuilder stb = new StringBuilder();
+	//
+	// Pattern pattern = Pattern.compile(input);
+	// Matcher match = pattern.matcher(input);
+	//
+	// match.replace
+	//
+	//
+	//
+	// return stb.toString();
+	// }
 }

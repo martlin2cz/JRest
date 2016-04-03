@@ -4,6 +4,8 @@ import java.util.Random;
 
 import cz.martlin.jrest.guest.JRestGuest;
 import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.protocol.JRestRequest;
+import cz.martlin.jrest.protocol.JRestResponse;
 
 /**
  * The client application of counter. Connects creates guest and sends some
@@ -30,13 +32,13 @@ public class CounterClientApp {
 				command = "decrement";
 			}
 
-			String result = guest.sendCommand(command);
+			JRestResponse result = guest.sendCommand(new JRestRequest(command));
 			System.out.println("Command " + command + " invoked, Result: " + result);
 			Thread.sleep(1000);
 		}
 
 		Thread.sleep(1000);
-		guest.stopWaiter();
+		//TODO guest.stopWaiter();
 
 	}
 

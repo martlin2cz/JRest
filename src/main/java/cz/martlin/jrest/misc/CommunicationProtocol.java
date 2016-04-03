@@ -6,6 +6,7 @@ package cz.martlin.jrest.misc;
  * @author martin
  *
  */
+@Deprecated
 public class CommunicationProtocol {
 
 	private static final String DFLT_EXIT_COMMAND = "quit";
