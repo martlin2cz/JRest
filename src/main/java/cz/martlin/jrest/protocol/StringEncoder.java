@@ -1,6 +1,6 @@
 package cz.martlin.jrest.protocol;
 
-import cz.martlin.jrest.misc.strings.TokenInfo;
+import cz.martlin.jrest.protocol.misc.TokenInfo;
 
 /**
  * Encodes strings before transmit (and decodes correctly after transmit) such that can be simply joined into one string and nextly splitted. Examples of encoded strings:

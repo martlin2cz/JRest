@@ -4,8 +4,10 @@ import java.util.Random;
 
 import cz.martlin.jrest.guest.JRestGuest;
 import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.protocol.GuestProtocol;
 import cz.martlin.jrest.protocol.JRestRequest;
 import cz.martlin.jrest.protocol.JRestResponse;
+import cz.martlin.jrest.protocol.protocols.simple.SimpleGuestProtocolImpl;
 
 /**
  * The client application of counter. Connects creates guest and sends some
@@ -20,9 +22,10 @@ public class CounterClientApp {
 	private static final int COUNT = 20;
 
 	public static void main(String[] args) throws JRestException, InterruptedException {
-		JRestGuest guest = new JRestGuest(CounterAppEntry.PROTOCOL);
-		Random rand = new Random();
+		GuestProtocol protocol = new SimpleGuestProtocolImpl(CounterAppEntry.PORT);
+		JRestGuest guest = new JRestGuest(protocol);
 
+		Random rand = new Random();
 		for (int i = 0; i < COUNT; i++) {
 
 			String command;
@@ -33,13 +36,11 @@ public class CounterClientApp {
 			}
 
 			JRestResponse result = guest.sendCommand(new JRestRequest(command));
-			System.out.println("Command " + command + " invoked, Result: " + result);
+			System.out.println("Command " + command + " invoked, result: " + result + "\n");
 			Thread.sleep(1000);
 		}
-
-		Thread.sleep(1000);
-		//TODO guest.stopWaiter();
-
+		
+		System.out.println("Done.");
 	}
 
 }

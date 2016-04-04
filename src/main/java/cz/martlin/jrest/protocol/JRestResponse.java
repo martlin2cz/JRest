@@ -67,4 +67,20 @@ public class JRestResponse {
 		return "JRestResponse [status=" + status + ", data=" + data + ", meta=" + meta + "]";
 	}
 
+	public static JRestResponse ok(String data) {
+		return new JRestResponse(ResponseStatus.OK, data, "");
+	}
+
+	public static JRestResponse warn(String data, String aditionalInfo) {
+		return new JRestResponse(ResponseStatus.WARN, data, aditionalInfo);
+	}
+
+	public static JRestResponse error(String data, String error) {
+		return new JRestResponse(ResponseStatus.ERROR, data, error);
+	}
+
+	public static JRestResponse fatal(String message) {
+		return new JRestResponse(ResponseStatus.FATAL, "", message);
+	}
+
 }

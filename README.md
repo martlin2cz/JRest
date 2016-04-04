@@ -4,7 +4,7 @@ Very simple framework to handle IPC between "server" (the main application) and 
 
 Because it uses servers called "waiter" and clients called "guest" the framework name really mean "restaurant".
 
-## How it works
+## How it works (from previous version, update in progress)
 
 You have an class `TheCounterApplication` encapsulating some simple counter application's functionality (incrementing and decrementing). But, you need to have counter value stored in memory and have some other application which this counter can increment or decrement. So, you implement custom `CommandProcessor` and specify `CommunicationProtocol`, and add to counter `JRestWaiter`. This should look like:
 ```java

@@ -43,7 +43,7 @@ public class JRestClient {
 		Socket sock = null;
 
 		try {
-			log.trace("Sending command: " + string);
+			log.trace("Sending to server: " + string);
 			sock = new Socket(host, port);
 
 			OutputStream ous = sock.getOutputStream();
@@ -52,10 +52,10 @@ public class JRestClient {
 			InputStream ins = sock.getInputStream();
 			String response = Tools.read(ins);
 
-			log.trace("Got response: " + response);
+			log.trace("Got from server: " + response);
 			return response;
 		} catch (Exception e) {
-			throw new JRestException("Cannot send command", e);
+			throw new JRestException("Cannot send message", e);
 		} finally {
 			IOUtils.closeQuietly(sock);
 		}

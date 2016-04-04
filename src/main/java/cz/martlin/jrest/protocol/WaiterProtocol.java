@@ -1,6 +1,8 @@
 package cz.martlin.jrest.protocol;
 
-import cz.martlin.jrest.waiter.CommandProcessor;
+import java.util.List;
+
+import cz.martlin.jrest.waiter.RequestHandler;
 
 public interface WaiterProtocol {
 	public int getPort();
@@ -9,5 +11,5 @@ public interface WaiterProtocol {
 
 	public ResponseSerializer getReponseSerializer();
 	
-	public CommandProcessor getProcessor();
+	public List<RequestHandler> getHandlers();
 }

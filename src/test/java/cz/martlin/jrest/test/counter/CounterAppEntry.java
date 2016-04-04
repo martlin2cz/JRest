@@ -1,9 +1,9 @@
 package cz.martlin.jrest.test.counter;
 
-import cz.martlin.jrest.protocol.protocols.DefaultProtocolImpl;
-import cz.martlin.jrest.protocol.serializers.ReqRespSerializer;
-import cz.martlin.jrest.waiter.CommandProcessor;
-import cz.martlin.jrest.waiter.JRestWaiterStarter;
+import cz.martlin.jrest.protocol.WaiterProtocol;
+import cz.martlin.jrest.protocol.protocols.simple.SimpleWaiterProtocolImpl;
+import cz.martlin.jrest.waiter.JRestWaiterShift;
+import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
  * The main entry for our counter app. Starts Waiter and does some application
@@ -14,24 +14,38 @@ import cz.martlin.jrest.waiter.JRestWaiterStarter;
  */
 public class CounterAppEntry {
 
-	private static final TheCounterApplication app = new TheCounterApplication();
-	private static final CommandProcessor processor = new CounterCommandsProcessor(app);
-	private static final ReqRespSerializer serializer = null; // TODO
-	public static final DefaultProtocolImpl PROTOCOL = new DefaultProtocolImpl(1111, "localhost", serializer,
-			processor);
+	public static final int PORT = 2016;
 
 	public static void main(String[] args) {
+		System.out.println("Starting...");
 
-		// JRestWaiter waiter = new JRestWaiter(PROTOCOL, processor);
+		TheCounterApplication app = new TheCounterApplication();
+		RequestHandler processor = new CounterCommandsHandler(app);
+		WaiterProtocol protocol = new SimpleWaiterProtocolImpl(PORT, processor);
+
+		// JRestWaiter waiter = new JRestWaiter(protocol);
 		// waiter.runWaiter();
 
-		JRestWaiterStarter starter = new JRestWaiterStarter(PROTOCOL);
+		JRestWaiterShift starter = new JRestWaiterShift(protocol);
 		starter.startWaiter();
 
+		System.out.println("Started.");
+
+		// do something interresting which takes a time
 		app.doSomething();
+
+		try {
+			Thread.sleep(10 * 1000);
+		} catch (InterruptedException e) {
+		}
+
 		app.doSomethingElse();
 
+		System.out.println("Stopping...");
+
 		starter.stopWaiter();
+
+		System.out.println("Stopped.");
 
 	}
 

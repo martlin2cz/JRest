@@ -3,17 +3,17 @@ package cz.martlin.jrest.waiter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.martlin.jrest.misc.CommunicationProtocol;
 import cz.martlin.jrest.protocol.WaiterProtocol;
 
 /**
- * Represents base input entry for {@link JRestWaiter}. Creates and runs waiter,
- * <strong>but in separate thread</strong>.
+ * Represents shift of {@link JRestWaiter}. The shift can be started and stoped
+ * whenever. In fact just simply wraps {@link JRestWaiter} in <strong>separate
+ * thread</strong>.
  * 
  * @author martin
  *
  */
-public class JRestWaiterStarter {
+public class JRestWaiterShift {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final JRestWaiter waiter;
@@ -26,7 +26,7 @@ public class JRestWaiterStarter {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiterStarter(WaiterProtocol protocol) {
+	public JRestWaiterShift(WaiterProtocol protocol) {
 		waiter = new JRestWaiter(protocol);
 		body = new WaiterRunnable(waiter);
 		thread = new WaiterThread(body);
@@ -36,20 +36,20 @@ public class JRestWaiterStarter {
 	 * Starts waiter.
 	 */
 	public void startWaiter() {
-		log.debug("Waiter starting..");
+		log.debug("Waiter's shift starting..");
 
 		thread.start();
 
-		log.info("Waiter started");
+		log.info("Waiter's shift started");
 	}
 
 	/**
 	 * Stops waiter.
 	 */
 	public void stopWaiter() {
-		log.debug("Waiter stopping..");
+		log.debug("Waiter's shift stopping..");
 
-		waiter.stopWaiter();
+		waiter.stopWaiter("Shift stop invoked");
 		thread.interrupt();
 
 		try {
@@ -57,6 +57,6 @@ public class JRestWaiterStarter {
 		} catch (InterruptedException e) {
 		}
 
-		log.info("Waiter stopped");
+		log.info("Waiter's shift stopped");
 	}
 }

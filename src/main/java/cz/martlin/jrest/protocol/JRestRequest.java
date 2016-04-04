@@ -14,6 +14,12 @@ public class JRestRequest {
 		this.arguments = Arrays.asList(arguments);
 	}
 
+	public JRestRequest(List<String> params) {
+		super();
+		this.command = params.get(0);
+		this.arguments = params.subList(1, params.size());
+	}
+
 	public String getCommand() {
 		return command;
 	}

@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Some tools class.
@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
  *
  */
 public class Tools {
+
+	private static final String SEPARATOR = ", ";
 
 	/**
 	 * Reads given input stream (with characters in default encoding) into
@@ -50,17 +52,28 @@ public class Tools {
 		}
 	}
 
-	// XXX
-	// public static String replaceAll(String input, String regex, int group) {
-	// StringBuilder stb = new StringBuilder();
-	//
-	// Pattern pattern = Pattern.compile(input);
-	// Matcher match = pattern.matcher(input);
-	//
-	// match.replace
-	//
-	//
-	//
-	// return stb.toString();
-	// }
+	/**
+	 * Converts given list of strings to string in format:
+	 * 
+	 * <pre>
+	 * foo{@value #SEPARATOR}bar{@value #SEPARATOR}baz
+	 * </pre>
+	 * 
+	 * @param strings
+	 * @return
+	 */
+	public static String listToString(List<String> strings) {
+		Iterator<String> iter = strings.iterator();
+		StringBuilder stb = new StringBuilder();
+
+		while (iter.hasNext()) {
+			String next = iter.next();
+			stb.append(next);
+			if (iter.hasNext()) {
+				stb.append(SEPARATOR);
+			}
+		}
+
+		return stb.toString();
+	}
 }

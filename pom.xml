@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cz.martlin</groupId>
 	<artifactId>JRest</artifactId>
-	<version>0.2</version>
+	<version>0.3</version>
 	<name>JRest, simple IPC</name>
 	<description>Very simple framework to handle IPC between "server" (Waiter, the main application) and at least one "client" (Guest, the commander(s)) applications</description>
 
@@ -51,6 +51,13 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		
+		<!-- Serializers -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.2</version>
 		</dependency>
 	</dependencies>
 

@@ -1,5 +1,8 @@
 package cz.martlin.jrest.guest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.GuestProtocol;
 import cz.martlin.jrest.protocol.JRestRequest;
@@ -12,26 +15,37 @@ import cz.martlin.jrest.protocol.JRestResponse;
  *
  */
 public class JRestGuest {
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	private final GuestProtocol protocol;
 	private final JRestClient client;
 
 	/**
-	 * Creates guest communicating with given procotol.
+	 * Creates guest communicating with given protocol.
 	 * 
 	 * @param protocol
 	 */
 	public JRestGuest(GuestProtocol protocol) {
 		this.protocol = protocol;
 		this.client = new JRestClient(protocol.getPort(), protocol.getWaiterHost());
+
+		log.info("Guest ready");
 	}
 
-	public JRestResponse sendCommand(JRestRequest command) throws JRestException {
-		String req = protocol.getRequestSerializer().serializeRequest(command);
+	public JRestResponse sendCommand(JRestRequest request) throws JRestException {
+		log.debug("Sending request: {}", request);
+
+		String req = protocol.getRequestSerializer().serializeRequest(request);
+		log.trace("Serialized request: {}", req);
 
 		String resp = client.send(req);
+		log.trace("Serialized response: {}", resp);
 
-		return protocol.getReponseDeserializer().deserializeResponse(resp);
+		JRestResponse response = protocol.getReponseDeserializer().deserializeResponse(resp);
+
+		log.debug("Got response: {}", response);
+		return response;
+
 	}
 
 }
