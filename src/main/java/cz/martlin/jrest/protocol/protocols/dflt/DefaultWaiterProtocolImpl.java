@@ -20,15 +20,15 @@ public class DefaultWaiterProtocolImpl extends BaseProtocolImpl implements Waite
 	private final List<RequestHandler> processors;
 
 	public DefaultWaiterProtocolImpl(int port, RequestSerializer requestSerializer,
-			ResponseSerializer responseSerializer, List<RequestHandler> processors) {
+			ResponseSerializer responseSerializer, List<RequestHandler> handlers) {
 
 		super(port, requestSerializer, responseSerializer);
-		this.processors = processors;
+		this.processors = handlers;
 	}
 
-	public DefaultWaiterProtocolImpl(int port, ReqRespSerializer serializer, List<RequestHandler> processors) {
+	public DefaultWaiterProtocolImpl(int port, ReqRespSerializer serializer, List<RequestHandler> handlers) {
 		super(port, serializer, serializer);
-		this.processors = processors;
+		this.processors = handlers;
 	}
 
 	@Override

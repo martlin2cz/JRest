@@ -23,14 +23,25 @@ public class JRestWaiterShift {
 	private final WaiterThread thread;
 
 	/**
-	 * Creates instance with given protocol and commands processor.
+	 * Creates instance with given protocol.
 	 * 
 	 * @param protocol
 	 * @param processor
 	 */
 	public JRestWaiterShift(WaiterProtocol protocol) {
-		waiter = new JRestWaiter(protocol);
-		thread = new WaiterThread(waiter);
+		this.waiter = new JRestWaiter(protocol);
+		this.thread = new WaiterThread(waiter);
+	}
+
+	/**
+	 * Creates instance with given yet existing waiter.
+	 * 
+	 * @param protocol
+	 * @param processor
+	 */
+	public JRestWaiterShift(JRestWaiter waiter) {
+		this.waiter = waiter;
+		this.thread = new WaiterThread(waiter);
 	}
 
 	/**
