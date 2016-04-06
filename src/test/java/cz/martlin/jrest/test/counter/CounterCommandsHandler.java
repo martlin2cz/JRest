@@ -1,7 +1,7 @@
 package cz.martlin.jrest.test.counter;
 
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 

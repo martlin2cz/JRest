@@ -1,10 +1,10 @@
 package cz.martlin.jrest.test.simple;
 
 import cz.martlin.jrest.misc.Tools;
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
 import cz.martlin.jrest.protocol.handlers.EchoCommandHandler;
 import cz.martlin.jrest.protocol.handlers.StopWaiterCommandHandler;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
@@ -22,14 +22,10 @@ public class SimpleHandler implements RequestHandler {
 
 	@Override
 	public void initialize(JRestWaiter waiter) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void finish(JRestWaiter waiter) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

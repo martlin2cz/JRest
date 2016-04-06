@@ -1,11 +1,11 @@
 package cz.martlin.jrest.waiter;
 
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
 
 /**
- * Processor of request got by waiter. Each implementation should handle given
- * command or ignore them - and leave to the next one.
+ * Handler of request got by waiter. Each implementation should handle some
+ * requests or ignore them - and leave to the next one.
  * 
  * @author martin
  *
@@ -29,11 +29,11 @@ public interface RequestHandler {
 	public abstract void finish(JRestWaiter waiter) throws Exception;
 
 	/**
-	 * Processes the given request. If this processor does not implement
-	 * handling of this command, should return null.
+	 * Processes the given request. If this handler does not implement handling
+	 * of this command, should return null.
 	 * 
 	 * @param request
-	 * @return
+	 * @return response or null
 	 * @throws Exception
 	 */
 	public abstract JRestResponse handle(JRestRequest request) throws Exception;

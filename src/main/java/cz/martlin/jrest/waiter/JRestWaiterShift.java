@@ -10,6 +10,9 @@ import cz.martlin.jrest.protocol.WaiterProtocol;
  * whenever. In fact just simply wraps {@link JRestWaiter} in <strong>separate
  * thread</strong>.
  * 
+ * <strong>Warning: once is stopped, to start again is required to create new
+ * instance</strong>
+ * 
  * @author martin
  *
  */
@@ -18,7 +21,6 @@ public class JRestWaiterShift {
 
 	private final JRestWaiter waiter;
 	private final WaiterThread thread;
-	private final WaiterRunnable body;
 
 	/**
 	 * Creates instance with given protocol and commands processor.
@@ -28,8 +30,7 @@ public class JRestWaiterShift {
 	 */
 	public JRestWaiterShift(WaiterProtocol protocol) {
 		waiter = new JRestWaiter(protocol);
-		body = new WaiterRunnable(waiter);
-		thread = new WaiterThread(body);
+		thread = new WaiterThread(waiter);
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class JRestWaiterShift {
 	public void stopWaiter() {
 		log.debug("Waiter's shift stopping..");
 
-		waiter.stopWaiter("Shift stop invoked");
+		waiter.awakeAndStopWaiter("Shift stop invoked");
 		thread.interrupt();
 
 		try {

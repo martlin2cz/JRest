@@ -5,11 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import cz.martlin.jrest.misc.JRestException;
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
-import cz.martlin.jrest.protocol.ResponseStatus;
-import cz.martlin.jrest.protocol.StringEncoder;
 import cz.martlin.jrest.protocol.misc.EncodedStringsParser;
+import cz.martlin.jrest.protocol.misc.StringEncoder;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
 
 /**
  * The simple serializer. The serializer uses following format:

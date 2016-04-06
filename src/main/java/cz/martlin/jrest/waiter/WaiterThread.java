@@ -10,9 +10,8 @@ import cz.martlin.jrest.misc.Interruptable;
  */
 public class WaiterThread extends Thread implements Interruptable {
 
-	public WaiterThread(WaiterRunnable body) {
-		super(body, "WaiterT");
-//		setDaemon(true);
+	public WaiterThread(JRestWaiter waiter) {
+		super(new WaiterRunnable(waiter), "WaiterThread");
 	}
 
 }

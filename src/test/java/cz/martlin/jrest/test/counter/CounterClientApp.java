@@ -5,9 +5,9 @@ import java.util.Random;
 import cz.martlin.jrest.guest.JRestGuest;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.GuestProtocol;
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
 import cz.martlin.jrest.protocol.protocols.simple.SimpleGuestProtocolImpl;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
 
 /**
  * The client application of counter. Connects creates guest and sends some
@@ -35,7 +35,7 @@ public class CounterClientApp {
 				command = "decrement";
 			}
 
-			JRestResponse result = guest.sendCommand(new JRestRequest(command));
+			JRestResponse result = guest.sendRequest(new JRestRequest(command));
 			System.out.println("Command " + command + " invoked, result: " + result + "\n");
 			Thread.sleep(1000);
 		}

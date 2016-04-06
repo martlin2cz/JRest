@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.GuestProtocol;
-import cz.martlin.jrest.protocol.JRestRequest;
-import cz.martlin.jrest.protocol.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.JRestRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestResponse;
 
 /**
  * Guest in JRest restaurant, who sends commands to its waiter.
@@ -32,7 +32,14 @@ public class JRestGuest {
 		log.info("Guest ready");
 	}
 
-	public JRestResponse sendCommand(JRestRequest request) throws JRestException {
+	/**
+	 * Sends given request to waiter and awaits the response.
+	 * 
+	 * @param request
+	 * @return
+	 * @throws JRestException
+	 */
+	public JRestResponse sendRequest(JRestRequest request) throws JRestException {
 		log.debug("Sending request: {}", request);
 
 		String req = protocol.getRequestSerializer().serializeRequest(request);

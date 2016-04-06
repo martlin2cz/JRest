@@ -24,8 +24,7 @@ public class JRestWaiter implements Interruptable {
 	private boolean interrupted;
 
 	/**
-	 * Creates waiter with given communication protocol and processor of
-	 * commands.
+	 * Creates waiter with given communication protocol .
 	 * 
 	 * @param protocol
 	 * @param processor
@@ -37,6 +36,7 @@ public class JRestWaiter implements Interruptable {
 
 	@Override
 	public void interrupt() {
+		server.interrupt();
 		this.interrupted = true;
 	}
 
@@ -83,16 +83,35 @@ public class JRestWaiter implements Interruptable {
 	}
 
 	/**
-	 * Stops waiter (marks server as interrupted).
+	 * Awakes the server by sending the suicide message and then makes them exit
+	 * (sets as interrupted).
+	 */
+	public void awakeAndStopWaiter(String message) {
+
+		logAndInterrupt(message);
+
+		SuiciderMessageSender suicider = new SuiciderMessageSender(protocol);
+		suicider.sendSuicideMessage();
+	}
+
+	/**
+	 * Awakes the server by sending the suicide message and then makes them exit
+	 * (sets as interrupted).
 	 */
 	public void stopWaiter(String message) {
+		logAndInterrupt(message);
+	}
+
+	/**
+	 * Does what it says - logs and interrupts the waiter.
+	 * 
+	 * @param message
+	 */
+	private void logAndInterrupt(String message) {
 		log.info("Waiter stop invoked " + //
 				((message != null) ? "with message: " + message : ""));
 
 		interrupt();
-		server.interrupt();
-		WaiterSuicider suicider = new WaiterSuicider(protocol);
-		suicider.doSuicide();
 	}
 
 }

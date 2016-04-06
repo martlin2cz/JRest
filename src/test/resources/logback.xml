@@ -18,7 +18,7 @@
 	<logger name="cz.martlin.jrest.waiter.WaiterSuicider" level="WARN" />
 	
 	<logger name="cz.martlin.jrest.guest.JRestGuest" level="DEBUG" />
-	<logger name="cz.martlin.jrest.guest.JRestClient" level="INFO" />
+	<logger name="cz.martlin.jrest.guest.JRestClient" level="TRACE" />
 	
 
 </configuration>

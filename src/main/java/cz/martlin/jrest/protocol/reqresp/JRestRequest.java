@@ -1,20 +1,41 @@
-package cz.martlin.jrest.protocol;
+package cz.martlin.jrest.protocol.reqresp;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * JRest Request, the query sent from guest to waiter. Each Request contains
+ * from command and optional arguments.
+ * 
+ * @author martin
+ *
+ */
 public class JRestRequest {
 
 	private final String command;
 	private final List<String> arguments;
 
+	/**
+	 * Constructs requst of given command and given arguments (if so).
+	 * 
+	 * @param command
+	 * @param arguments
+	 */
 	public JRestRequest(String command, String... arguments) {
 		super();
 		this.command = command;
 		this.arguments = Arrays.asList(arguments);
 	}
 
-	public JRestRequest(List<String> params) {
+	/**
+	 * Creates request from given list of parameters. First parameters takes the
+	 * place of the command, the others are arguments.
+	 * 
+	 * @param params
+	 * @throws IndexOutOfBoundsException
+	 *             if params is empty
+	 */
+	public JRestRequest(List<String> params) throws IndexOutOfBoundsException {
 		super();
 		this.command = params.get(0);
 		this.arguments = params.subList(1, params.size());

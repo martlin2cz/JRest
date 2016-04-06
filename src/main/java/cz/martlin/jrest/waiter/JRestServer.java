@@ -44,7 +44,7 @@ public class JRestServer implements Interruptable {
 	}
 
 	/**
-	 * Starts server
+	 * Starts server.
 	 * 
 	 * @return
 	 * @throws JRestException
@@ -85,6 +85,16 @@ public class JRestServer implements Interruptable {
 		}
 	}
 
+	/**
+	 * Check if the server is not yet interrupted. If yes, logs and very very
+	 * very simply writes some shit (okay, just empty string) into response and
+	 * returns.
+	 * 
+	 * @param sock
+	 * @return true if have been interrupted, false if not
+	 * @throws IOException
+	 * @throws JRestException
+	 */
 	private boolean checkAndHandleInterrupted(Socket sock) throws IOException, JRestException {
 		if (interrupted) {
 			log.debug("Server is interrupted, the recieved request is ignored and response is beeing send empty");

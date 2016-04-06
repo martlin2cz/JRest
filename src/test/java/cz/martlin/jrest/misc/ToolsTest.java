@@ -9,6 +9,7 @@ import org.junit.Test;
 
 /**
  * Test of {@link Tools} class.
+ * 
  * @author martin
  *
  */
@@ -35,15 +36,5 @@ public class ToolsTest {
 
 		assertEquals(expected, actual);
 	}
-
-//	@Test
-//	public void testRead() {
-//		// fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testWrite() {
-//		// fail("Not yet implemented");
-//	}
 
 }

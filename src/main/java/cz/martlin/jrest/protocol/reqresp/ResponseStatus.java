@@ -1,15 +1,23 @@
-package cz.martlin.jrest.protocol;
+package cz.martlin.jrest.protocol.reqresp;
 
+/**
+ * Status of {@link JRestResponse}.
+ * 
+ * @author martin
+ *
+ */
 public enum ResponseStatus {
 	/**
 	 * Processing completed successfully with no problems.
 	 */
 	OK,
+
 	/**
 	 * Processing completed with some small problems, but still less-or-more
 	 * successfully.
 	 */
 	WARN,
+
 	/**
 	 * Processing somehow failed.
 	 */
