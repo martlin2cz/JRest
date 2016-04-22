@@ -1,7 +1,7 @@
-package cz.martlin.jrest.protocol.reqresp;
+package cz.martlin.jrest.protocol.reqresps.simple;
 
 /**
- * Status of {@link JRestResponse}.
+ * Status of {@link SimpleResponse}.
  * 
  * @author martin
  *

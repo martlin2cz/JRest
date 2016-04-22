@@ -1,4 +1,4 @@
-package cz.martlin.jrest.protocol.serializers;
+package cz.martlin.jrest.protocol.serializers.simple;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +7,10 @@ import java.util.List;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.misc.EncodedStringsParser;
 import cz.martlin.jrest.protocol.misc.StringEncoder;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
-import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
+import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 
 /**
  * The simple serializer. The serializer uses following format:
@@ -27,13 +28,13 @@ import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
  * @author martin
  *
  */
-public class SimpleSerializerImpl implements ReqRespSerializer {
+public class SimplesSeparatedSerializer implements ReqRespSerializer<SimpleRequest, SimpleResponse> {
 
 	private final StringEncoder encoder;
 	private final String separator;
 	private final EncodedStringsParser parser;
 
-	public SimpleSerializerImpl(StringEncoder encoder, String separator) {
+	public SimplesSeparatedSerializer(StringEncoder encoder, String separator) {
 		this.encoder = encoder;
 		this.separator = separator;
 
@@ -41,7 +42,7 @@ public class SimpleSerializerImpl implements ReqRespSerializer {
 	}
 
 	@Override
-	public String serializeResponse(JRestResponse response) throws JRestException {
+	public String serializeResponse(SimpleResponse response) throws JRestException {
 		StringBuilder stb = new StringBuilder();
 
 		stb.append(response.getStatus());
@@ -68,7 +69,7 @@ public class SimpleSerializerImpl implements ReqRespSerializer {
 	}
 
 	@Override
-	public JRestResponse deserializeResponse(String serialized) throws JRestException {
+	public SimpleResponse deserializeResponse(String serialized) throws JRestException {
 		List<String> parts = parser.parse(serialized);
 
 		if (parts.size() != 3) {
@@ -102,11 +103,11 @@ public class SimpleSerializerImpl implements ReqRespSerializer {
 			throw new JRestException("Cannot decode data " + third);
 		}
 
-		return new JRestResponse(status, data, meta);
+		return new SimpleResponse(status, data, meta);
 	}
 
 	@Override
-	public String serializeRequest(JRestRequest request) throws JRestException {
+	public String serializeRequest(SimpleRequest request) throws JRestException {
 		StringBuilder stb = new StringBuilder();
 
 		stb.append(request.getCommand());
@@ -132,7 +133,7 @@ public class SimpleSerializerImpl implements ReqRespSerializer {
 	}
 
 	@Override
-	public JRestRequest deserializeRequest(String serialized) throws JRestException {
+	public SimpleRequest deserializeRequest(String serialized) throws JRestException {
 		List<String> parts = parser.parse(serialized);
 
 		if (parts.size() < 1) {
@@ -150,7 +151,7 @@ public class SimpleSerializerImpl implements ReqRespSerializer {
 			}
 		}
 
-		return new JRestRequest(parameters);
+		return new SimpleRequest(parameters);
 	}
 
 }

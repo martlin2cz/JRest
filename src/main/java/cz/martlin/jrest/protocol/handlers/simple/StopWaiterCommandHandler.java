@@ -1,10 +1,10 @@
-package cz.martlin.jrest.protocol.handlers;
+package cz.martlin.jrest.protocol.handlers.simple;
 
 import java.util.List;
 
 import cz.martlin.jrest.misc.Tools;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 
 /**
@@ -20,28 +20,28 @@ import cz.martlin.jrest.waiter.JRestWaiter;
  * @author martin
  *
  */
-public class StopWaiterCommandHandler extends SingleCommandRequestHandler {
+public class StopWaiterCommandHandler extends SingleCommandSimpleRequestHandler {
 
 	public static final String STOP_WAITER_COMMAND = "stop-waiter";
 
-	private JRestWaiter waiter;
+	private JRestWaiter<SimpleRequest, SimpleResponse> waiter;
 
 	public StopWaiterCommandHandler() {
 		super(STOP_WAITER_COMMAND);
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 		this.waiter = waiter;
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 		this.waiter = null;
 	}
 
 	@Override
-	public JRestResponse handle(List<String> arguments) throws Exception {
+	public SimpleResponse handle(List<String> arguments) throws Exception {
 		if (arguments.size() == 0) {
 			return stopWaiter(null, null);
 		} else if (arguments.size() == 1) {
@@ -51,15 +51,16 @@ public class StopWaiterCommandHandler extends SingleCommandRequestHandler {
 		}
 	}
 
-	private JRestResponse stopWaiter(String messageOrNull, List<String> extraArgsOrNull) {
+	private SimpleResponse stopWaiter(String messageOrNull, List<String> extraArgsOrNull) {
 		waiter.stopWaiter(messageOrNull);
 
 		String data = "Waiter stopped";
 
 		if (extraArgsOrNull == null) {
-			return JRestResponse.ok(data);
+			return SimpleResponse.ok(data);
 		} else {
-			return JRestResponse.warn(data, "Excepted 0 or 1 arguments, given: " + Tools.listToString(extraArgsOrNull));
+			return SimpleResponse.warn(data,
+					"Excepted 0 or 1 arguments, given: " + Tools.listToString(extraArgsOrNull));
 		}
 	}
 
@@ -68,8 +69,8 @@ public class StopWaiterCommandHandler extends SingleCommandRequestHandler {
 	 * 
 	 * @return
 	 */
-	public static JRestRequest createRequest() {
-		return new JRestRequest(STOP_WAITER_COMMAND);
+	public static SimpleRequest createRequest() {
+		return new SimpleRequest(STOP_WAITER_COMMAND);
 	}
 
 	/**
@@ -78,8 +79,8 @@ public class StopWaiterCommandHandler extends SingleCommandRequestHandler {
 	 * @param message
 	 * @return
 	 */
-	public static JRestRequest createRequest(String message) {
-		return new JRestRequest(STOP_WAITER_COMMAND, message);
+	public static SimpleRequest createRequest(String message) {
+		return new SimpleRequest(STOP_WAITER_COMMAND, message);
 	}
 
 }

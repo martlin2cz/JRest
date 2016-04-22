@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.GuestProtocol;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
  * Guest in JRest restaurant, who sends commands to its waiter.
@@ -14,10 +14,10 @@ import cz.martlin.jrest.protocol.reqresp.JRestResponse;
  * @author martin
  *
  */
-public class JRestGuest {
+public class JRestGuest<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final GuestProtocol protocol;
+	private final GuestProtocol<RQT, RST> protocol;
 	private final JRestClient client;
 
 	/**
@@ -25,7 +25,7 @@ public class JRestGuest {
 	 * 
 	 * @param protocol
 	 */
-	public JRestGuest(GuestProtocol protocol) {
+	public JRestGuest(GuestProtocol<RQT, RST> protocol) {
 		this.protocol = protocol;
 		this.client = new JRestClient(protocol.getPort(), protocol.getWaiterHost());
 
@@ -39,7 +39,7 @@ public class JRestGuest {
 	 * @return
 	 * @throws JRestException
 	 */
-	public JRestResponse sendRequest(JRestRequest request) throws JRestException {
+	public RST sendRequest(RQT request) throws JRestException {
 		log.debug("Sending request: {}", request);
 
 		String req = protocol.getRequestSerializer().serializeRequest(request);
@@ -48,7 +48,7 @@ public class JRestGuest {
 		String resp = client.send(req);
 		log.trace("Serialized response: {}", resp);
 
-		JRestResponse response = protocol.getReponseDeserializer().deserializeResponse(resp);
+		RST response = protocol.getReponseDeserializer().deserializeResponse(resp);
 
 		log.debug("Got response: {}", response);
 		return response;

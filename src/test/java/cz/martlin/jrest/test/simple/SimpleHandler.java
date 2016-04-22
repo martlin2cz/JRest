@@ -1,10 +1,10 @@
 package cz.martlin.jrest.test.simple;
 
 import cz.martlin.jrest.misc.Tools;
-import cz.martlin.jrest.protocol.handlers.EchoCommandHandler;
-import cz.martlin.jrest.protocol.handlers.StopWaiterCommandHandler;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.handlers.simple.EchoSimpleCommandHandler;
+import cz.martlin.jrest.protocol.handlers.simple.StopWaiterCommandHandler;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
@@ -15,30 +15,30 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class SimpleHandler implements RequestHandler {
+public class SimpleHandler implements RequestHandler<SimpleRequest, SimpleResponse> {
 
 	public SimpleHandler() {
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
+	public SimpleResponse handle(SimpleRequest request) throws Exception {
 		if (StopWaiterCommandHandler.STOP_WAITER_COMMAND.equals(request.getCommand())
-				|| EchoCommandHandler.ECHO_COMMAND.equals(request.getCommand())) {
+				|| EchoSimpleCommandHandler.ECHO_COMMAND.equals(request.getCommand())) {
 			return null;
 		}
 
 		System.err.println(" === Handling: " + request.getCommand() + " with arguments: "
 				+ Tools.listToString(request.getArguments()));
 
-		return JRestResponse.ok("Okay, handled " + request.getCommand());
+		return SimpleResponse.ok("Okay, handled " + request.getCommand());
 	}
 
 }

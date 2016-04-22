@@ -1,9 +1,7 @@
 package cz.martlin.jrest.test.counter;
 
-import cz.martlin.jrest.protocol.WaiterProtocol;
 import cz.martlin.jrest.protocol.protocols.simple.SimpleWaiterProtocolImpl;
 import cz.martlin.jrest.waiter.JRestWaiterShift;
-import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
  * The main entry for our counter app. Starts Waiter and does some application
@@ -20,13 +18,13 @@ public class CounterAppEntry {
 		System.out.println("Starting...");
 
 		TheCounterApplication app = new TheCounterApplication();
-		RequestHandler processor = new CounterCommandsHandler(app);
-		WaiterProtocol protocol = new SimpleWaiterProtocolImpl(PORT, processor);
+		CounterCommandsHandler processor = new CounterCommandsHandler(app);
+		SimpleWaiterProtocolImpl protocol = new SimpleWaiterProtocolImpl(PORT, processor);
 
 		// JRestWaiter waiter = new JRestWaiter(protocol);
 		// waiter.runWaiter();
 
-		JRestWaiterShift starter = new JRestWaiterShift(protocol);
+		JRestWaiterShift<?,?> starter = new JRestWaiterShift<>(protocol);
 		starter.startWaiter();
 
 		System.out.println("Started.");

@@ -1,5 +1,7 @@
-package cz.martlin.jrest.protocol.serializers;
+package cz.martlin.jrest.protocol.serializer;
 
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
 
@@ -11,6 +13,7 @@ import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
  * @author martin
  *
  */
-public interface ReqRespSerializer extends RequestSerializer, ResponseSerializer {
+public interface ReqRespSerializer<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse>
+		extends RequestSerializer<RQT>, ResponseSerializer<RST> {
 
 }

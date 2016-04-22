@@ -1,16 +1,18 @@
-package cz.martlin.jrest.protocol.reqresp;
+package cz.martlin.jrest.protocol.reqresps.simple;
 
 import java.util.Arrays;
 import java.util.List;
 
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+
 /**
- * JRest Request, the query sent from guest to waiter. Each Request contains
- * from command and optional arguments.
+ * JRest Simple Request. Each such request contains command and (list of)
+ * arguments to be called with.
  * 
  * @author martin
  *
  */
-public class JRestRequest {
+public class SimpleRequest implements JRestAbstractRequest {
 
 	private final String command;
 	private final List<String> arguments;
@@ -21,7 +23,7 @@ public class JRestRequest {
 	 * @param command
 	 * @param arguments
 	 */
-	public JRestRequest(String command, String... arguments) {
+	public SimpleRequest(String command, String... arguments) {
 		super();
 		this.command = command;
 		this.arguments = Arrays.asList(arguments);
@@ -35,16 +37,26 @@ public class JRestRequest {
 	 * @throws IndexOutOfBoundsException
 	 *             if params is empty
 	 */
-	public JRestRequest(List<String> params) throws IndexOutOfBoundsException {
+	public SimpleRequest(List<String> params) throws IndexOutOfBoundsException {
 		super();
 		this.command = params.get(0);
 		this.arguments = params.subList(1, params.size());
 	}
 
+	/**
+	 * Returns the command name.
+	 * 
+	 * @return
+	 */
 	public String getCommand() {
 		return command;
 	}
 
+	/**
+	 * Returns the arguments which is the command called with.
+	 * 
+	 * @return
+	 */
 	public List<String> getArguments() {
 		return arguments;
 	}
@@ -66,7 +78,7 @@ public class JRestRequest {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JRestRequest other = (JRestRequest) obj;
+		SimpleRequest other = (SimpleRequest) obj;
 		if (!arguments.equals(other.arguments))
 			return false;
 		if (command == null) {

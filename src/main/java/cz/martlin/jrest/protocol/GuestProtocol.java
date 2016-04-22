@@ -1,5 +1,7 @@
 package cz.martlin.jrest.protocol;
 
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
 
@@ -9,7 +11,7 @@ import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
  * @author martin
  *
  */
-public interface GuestProtocol {
+public interface GuestProtocol<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 	/**
 	 * Returns the port of the communication.
 	 * 
@@ -29,12 +31,12 @@ public interface GuestProtocol {
 	 * 
 	 * @return
 	 */
-	public RequestSerializer getRequestSerializer();
+	public RequestSerializer<RQT> getRequestSerializer();
 
 	/**
 	 * Returns deserializer of responses.
 	 * 
 	 * @return
 	 */
-	public ResponseSerializer getReponseDeserializer();
+	public ResponseSerializer<RST> getReponseDeserializer();
 }

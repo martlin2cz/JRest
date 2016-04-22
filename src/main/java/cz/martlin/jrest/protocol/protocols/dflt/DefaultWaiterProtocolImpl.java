@@ -4,9 +4,11 @@ import java.util.List;
 
 import cz.martlin.jrest.protocol.WaiterProtocol;
 import cz.martlin.jrest.protocol.protocols.BaseProtocolImpl;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
-import cz.martlin.jrest.protocol.serializers.ReqRespSerializer;
+import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
@@ -15,34 +17,36 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class DefaultWaiterProtocolImpl extends BaseProtocolImpl implements WaiterProtocol {
+public class DefaultWaiterProtocolImpl<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> //
+		extends BaseProtocolImpl<RQT, RST> implements WaiterProtocol<RQT, RST> {
 
-	private final List<RequestHandler> processors;
+	private final List<RequestHandler<RQT, RST>> processors;
 
-	public DefaultWaiterProtocolImpl(int port, RequestSerializer requestSerializer,
-			ResponseSerializer responseSerializer, List<RequestHandler> handlers) {
+	public DefaultWaiterProtocolImpl(int port, RequestSerializer<RQT> requestSerializer,
+			ResponseSerializer<RST> responseSerializer, List<RequestHandler<RQT, RST>> handlers) {
 
 		super(port, requestSerializer, responseSerializer);
 		this.processors = handlers;
 	}
 
-	public DefaultWaiterProtocolImpl(int port, ReqRespSerializer serializer, List<RequestHandler> handlers) {
+	public DefaultWaiterProtocolImpl(int port, ReqRespSerializer<RQT, RST> serializer,
+			List<RequestHandler<RQT, RST>> handlers) {
 		super(port, serializer, serializer);
 		this.processors = handlers;
 	}
 
 	@Override
-	public RequestSerializer getRequestDeserializer() {
+	public RequestSerializer<RQT> getRequestDeserializer() {
 		return requestSerializer;
 	}
 
 	@Override
-	public ResponseSerializer getReponseSerializer() {
+	public ResponseSerializer<RST> getReponseSerializer() {
 		return responseSerializer;
 	}
 
 	@Override
-	public List<RequestHandler> getHandlers() {
+	public List<RequestHandler<RQT, RST>> getHandlers() {
 		return processors;
 	}
 
@@ -62,7 +66,7 @@ public class DefaultWaiterProtocolImpl extends BaseProtocolImpl implements Waite
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DefaultWaiterProtocolImpl other = (DefaultWaiterProtocolImpl) obj;
+		DefaultWaiterProtocolImpl<?, ?> other = (DefaultWaiterProtocolImpl<?, ?>) obj;
 		if (processors == null) {
 			if (other.processors != null)
 				return false;

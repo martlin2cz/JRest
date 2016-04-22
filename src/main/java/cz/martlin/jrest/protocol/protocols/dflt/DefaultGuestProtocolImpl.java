@@ -2,9 +2,11 @@ package cz.martlin.jrest.protocol.protocols.dflt;
 
 import cz.martlin.jrest.protocol.GuestProtocol;
 import cz.martlin.jrest.protocol.protocols.BaseProtocolImpl;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
-import cz.martlin.jrest.protocol.serializers.ReqRespSerializer;
+import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 
 /**
  * The default implementation of {@link GuestProtocol}.
@@ -12,18 +14,19 @@ import cz.martlin.jrest.protocol.serializers.ReqRespSerializer;
  * @author martin
  *
  */
-public class DefaultGuestProtocolImpl extends BaseProtocolImpl implements GuestProtocol {
+public class DefaultGuestProtocolImpl<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse>
+		extends BaseProtocolImpl<RQT, RST> implements GuestProtocol<RQT, RST> {
 
 	private final String host;
 
-	public DefaultGuestProtocolImpl(int port, String host, RequestSerializer requestSerializer,
-			ResponseSerializer responseSerializer) {
+	public DefaultGuestProtocolImpl(int port, String host, RequestSerializer<RQT> requestSerializer,
+			ResponseSerializer<RST> responseSerializer) {
 
 		super(port, requestSerializer, responseSerializer);
 		this.host = host;
 	}
 
-	public DefaultGuestProtocolImpl(int port, String host, ReqRespSerializer serializer) {
+	public DefaultGuestProtocolImpl(int port, String host, ReqRespSerializer<RQT, RST> serializer) {
 		super(port, serializer, serializer);
 		this.host = host;
 	}
@@ -34,12 +37,12 @@ public class DefaultGuestProtocolImpl extends BaseProtocolImpl implements GuestP
 	}
 
 	@Override
-	public RequestSerializer getRequestSerializer() {
+	public RequestSerializer<RQT> getRequestSerializer() {
 		return requestSerializer;
 	}
 
 	@Override
-	public ResponseSerializer getReponseDeserializer() {
+	public ResponseSerializer<RST> getReponseDeserializer() {
 		return responseSerializer;
 	}
 
@@ -59,7 +62,7 @@ public class DefaultGuestProtocolImpl extends BaseProtocolImpl implements GuestP
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DefaultGuestProtocolImpl other = (DefaultGuestProtocolImpl) obj;
+		DefaultGuestProtocolImpl<?, ?> other = (DefaultGuestProtocolImpl<?, ?>) obj;
 		if (host == null) {
 			if (other.host != null)
 				return false;

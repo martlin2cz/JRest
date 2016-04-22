@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import cz.martlin.jrest.guest.JRestClient;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.WaiterProtocol;
-import cz.martlin.jrest.protocol.handlers.StopWaiterCommandHandler;
+import cz.martlin.jrest.protocol.handlers.simple.StopWaiterCommandHandler;
 
 /**
  * When the waiter's server is interrupted directly (not by interrupting
@@ -27,9 +27,9 @@ public class SuiciderMessageSender {
 	private static final String SUICIDE_HOST = "localhost";
 	private static final String SUICIDE_MESSAGE = "Hasta la vista, baby!";
 
-	private final WaiterProtocol protocol;
+	private final WaiterProtocol<?,?> protocol;
 
-	public SuiciderMessageSender(WaiterProtocol protocol) {
+	public SuiciderMessageSender(WaiterProtocol<?,?> protocol) {
 		this.protocol = protocol;
 	}
 

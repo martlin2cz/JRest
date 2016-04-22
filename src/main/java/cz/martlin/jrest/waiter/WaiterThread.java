@@ -1,6 +1,8 @@
 package cz.martlin.jrest.waiter;
 
 import cz.martlin.jrest.misc.Interruptable;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
  * Thread to run waiter in.
@@ -8,10 +10,10 @@ import cz.martlin.jrest.misc.Interruptable;
  * @author martin
  *
  */
-public class WaiterThread extends Thread implements Interruptable {
+public class WaiterThread<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> extends Thread implements Interruptable {
 
-	public WaiterThread(JRestWaiter waiter) {
-		super(new WaiterRunnable(waiter), "WaiterThread");
+	public WaiterThread(JRestWaiter<RQT, RST> waiter) {
+		super(new WaiterRunnable<RQT, RST>(waiter), "WaiterThread");
 	}
 
 }

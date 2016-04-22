@@ -1,9 +1,9 @@
-package cz.martlin.jrest.protocol.handlers;
+package cz.martlin.jrest.protocol.handlers.simple;
 
 import java.util.List;
 
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
@@ -17,24 +17,24 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public abstract class SingleCommandRequestHandler implements RequestHandler {
+public abstract class SingleCommandSimpleRequestHandler implements RequestHandler<SimpleRequest, SimpleResponse> {
 
 	private final String command;
 
-	public SingleCommandRequestHandler(String command) {
+	public SingleCommandSimpleRequestHandler(String command) {
 		this.command = command;
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
+	public SimpleResponse handle(SimpleRequest request) throws Exception {
 		if (command.equals(request.getCommand())) {
 			return handle(request.getArguments());
 		} else {
@@ -50,5 +50,5 @@ public abstract class SingleCommandRequestHandler implements RequestHandler {
 	 * @return
 	 * @throws Exception
 	 */
-	public abstract JRestResponse handle(List<String> arguments) throws Exception;
+	public abstract SimpleResponse handle(List<String> arguments) throws Exception;
 }

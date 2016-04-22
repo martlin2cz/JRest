@@ -1,11 +1,11 @@
-package cz.martlin.jrest.protocol.handlers;
+package cz.martlin.jrest.protocol.handlers.simple;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.Tools;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
@@ -17,7 +17,7 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class UnhandledReqsHandler implements RequestHandler {
+public class UnhandledReqsHandler implements RequestHandler<SimpleRequest, SimpleResponse> {
 
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -25,15 +25,15 @@ public class UnhandledReqsHandler implements RequestHandler {
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
+	public SimpleResponse handle(SimpleRequest request) throws Exception {
 		return handleQuietly(request);
 	}
 
@@ -43,13 +43,13 @@ public class UnhandledReqsHandler implements RequestHandler {
 	 * @param request
 	 * @return
 	 */
-	public JRestResponse handleQuietly(JRestRequest request) {
+	public SimpleResponse handleQuietly(SimpleRequest request) {
 
 		String message = "Came request with command " + request.getCommand() + " which cannot be handled. "//
 				+ "Original arguments: " + Tools.listToString(request.getArguments());
 
 		log.warn(message);
 
-		return JRestResponse.fatal(message);
+		return SimpleResponse.fatal(message);
 	}
 }

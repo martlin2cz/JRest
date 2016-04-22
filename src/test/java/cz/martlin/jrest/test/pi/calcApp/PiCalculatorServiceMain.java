@@ -3,12 +3,10 @@ package cz.martlin.jrest.test.pi.calcApp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.martlin.jrest.protocol.WaiterProtocol;
-import cz.martlin.jrest.protocol.handlers.StopWaiterCommandHandler;
+import cz.martlin.jrest.protocol.handlers.simple.StopWaiterCommandHandler;
 import cz.martlin.jrest.protocol.protocols.simple.SimpleWaiterProtocolImpl;
 import cz.martlin.jrest.test.pi.calculator.PiAproxComputer;
 import cz.martlin.jrest.waiter.JRestWaiterShift;
-import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
  * The main application ("computing service app") for computing pi.
@@ -31,7 +29,7 @@ public class PiCalculatorServiceMain {
 		runWaiter(computer);
 
 		log.debug("Waiter running. Hit Ctrl+C or use " //
-				+ "'echo " + StopWaiterCommandHandler.STOP_WAITER_COMMAND + " \"telnet interrupt\" | telnet localhost "
+				+ "'echo " + StopWaiterCommandHandler.STOP_WAITER_COMMAND + " \"interrupted-by-telnet\" | telnet localhost "
 				+ PORT + "'");
 
 		// log.info("Computation running...");
@@ -50,9 +48,9 @@ public class PiCalculatorServiceMain {
 	 * @param computer
 	 */
 	private static void runWaiter(PiAproxComputer computer) {
-		RequestHandler handler = new PiComputerHandler(computer);
-		WaiterProtocol protocol = new SimpleWaiterProtocolImpl(PORT, handler);
-		JRestWaiterShift shift = new JRestWaiterShift(protocol);
+		PiComputerHandler handler = new PiComputerHandler(computer);
+		SimpleWaiterProtocolImpl protocol = new SimpleWaiterProtocolImpl(PORT, handler);
+		JRestWaiterShift<?, ?> shift = new JRestWaiterShift<>(protocol);
 		shift.startWaiter();
 	}
 

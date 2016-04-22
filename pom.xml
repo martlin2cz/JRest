@@ -4,7 +4,7 @@
 	<groupId>cz.martlin</groupId>
 	<artifactId>JRest</artifactId>
 	<name>JRest, simple IPC</name>
-	<description>Very simple framework to handle IPC between "server" (Waiter, the main application) and at least one "client" (Guest, the commander(s)) applications</description>
+	<description>Very simple framework to handle IPC between Waiter (&quot;server&quot;, the main application) and at least one Guest(&quot;client&quot;, the commander(s)) applications</description>
 
 	<developers>
 		<developer>
@@ -61,5 +61,5 @@
 		</dependency>
 	</dependencies>
 
-	<version>1.1</version>
+	<version>1.2-beta</version>
 </project>

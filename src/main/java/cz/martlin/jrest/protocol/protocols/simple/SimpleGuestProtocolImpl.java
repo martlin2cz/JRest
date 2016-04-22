@@ -1,6 +1,8 @@
 package cz.martlin.jrest.protocol.protocols.simple;
 
 import cz.martlin.jrest.protocol.protocols.dflt.DefaultGuestProtocolImpl;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 
 /**
  * The simple guest procotol. Uses {@link SimpleJRestProtocolImpl}'s serializer.
@@ -8,7 +10,7 @@ import cz.martlin.jrest.protocol.protocols.dflt.DefaultGuestProtocolImpl;
  * @author martin
  *
  */
-public class SimpleGuestProtocolImpl extends DefaultGuestProtocolImpl {
+public class SimpleGuestProtocolImpl extends DefaultGuestProtocolImpl<SimpleRequest, SimpleResponse> {
 
 	/**
 	 * Creates simple guest protocol with given port and default host (

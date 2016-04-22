@@ -1,12 +1,11 @@
-package cz.martlin.jrest.protocol.handlers;
+package cz.martlin.jrest.protocol.handlers.simple;
 
 import java.util.Date;
 import java.util.List;
 
 import cz.martlin.jrest.misc.Tools;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
-import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 
 /**
  * Implements simple handler such that handles requests with commands
@@ -19,20 +18,20 @@ import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
  * @author martin
  *
  */
-public class EchoCommandHandler extends SingleCommandRequestHandler {
+public class EchoSimpleCommandHandler extends SingleCommandSimpleRequestHandler {
 
 	public final static String ECHO_COMMAND = "echo";
 
-	public EchoCommandHandler() {
+	public EchoSimpleCommandHandler() {
 		super(ECHO_COMMAND);
 	}
 
 	@Override
-	public JRestResponse handle(List<String> arguments) throws Exception {
+	public SimpleResponse handle(List<String> arguments) throws Exception {
 		String data = "Recieved echo command with arguments: " + Tools.listToString(arguments);
 		String meta = new Date().toString();
 
-		return new JRestResponse(ResponseStatus.OK, data, meta);
+		return SimpleResponse.ok(data, meta);
 	}
 
 	/**
@@ -41,8 +40,8 @@ public class EchoCommandHandler extends SingleCommandRequestHandler {
 	 * @param arguments
 	 * @return
 	 */
-	public static JRestRequest createRequest(String... arguments) {
-		return new JRestRequest(ECHO_COMMAND, arguments);
+	public static SimpleRequest createRequest(String... arguments) {
+		return new SimpleRequest(ECHO_COMMAND, arguments);
 	}
 
 }

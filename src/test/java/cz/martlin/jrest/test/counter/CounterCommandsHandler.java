@@ -1,7 +1,7 @@
 package cz.martlin.jrest.test.counter;
 
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
@@ -13,7 +13,7 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class CounterCommandsHandler implements RequestHandler {
+public class CounterCommandsHandler implements RequestHandler<SimpleRequest, SimpleResponse> {
 
 	private final TheCounterApplication app;
 
@@ -22,15 +22,15 @@ public class CounterCommandsHandler implements RequestHandler {
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
+	public SimpleResponse handle(SimpleRequest request) throws Exception {
 		String command = request.getCommand();
 
 		if ("increment".equals(command)) {
@@ -38,11 +38,11 @@ public class CounterCommandsHandler implements RequestHandler {
 		} else if ("decrement".equals(command)) {
 			app.decrement();
 		} else {
-			return JRestResponse.error("", "Unknown command " + command);
+			return SimpleResponse.error("Unknown command " + command);
 		}
 
 		String response = Integer.toString(app.getCounter());
-		return JRestResponse.ok(response);
+		return SimpleResponse.ok(response);
 
 	}
 

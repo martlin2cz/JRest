@@ -1,5 +1,8 @@
 # JRest
 
+## Warning
+__Warning:__ this text is outdated, take a look into src/test/java/ into package cz.martlin.test for examples of usage. Will be corrected as soon as I complete the updates I am currently performing.
+
 ## Abstract
 
 JRest is framework which simulates something like restaurant. Also, JRest is the IPC _(inter-process communication)_ (or, if you want, RMI _(remote method invocation)_) java framework.
@@ -129,6 +132,11 @@ The JRest comes with the "simple" request/response serializer implementation, cl
 When using simple protocol (`SimpleWaiterProtocolImpl` or `SimpleJRestProtocolImpl`) there are automatically added two additional handlers. The first one is echo handler, class `EchoCommandHandler`, which handles commands with name echo and simply responds the sent arguments back. It's made to use in diagnostics and testing/debugging. The second one is handler, which performs stopping of the waiter (class `StopWaiterCommandHandler`). 
 
 Just remind that the waiter (if runned in shift) can be stopped "by hand" (by calling of method) directly from the waiter itself.
+
+## Security note
+Notice that JRest itself does not guarantee the security of the application. When using, be carefull to have blocked (i.e. via firewall) ports used by your JRest application from the outside world. Similarly, when you have to run JRest remotelly, allways think about the security (and use some authorisation token for instance). But remember, the communication is still unsecured, so anyone can catch the socket and read the authorisation data.
+
+The security is not the priority of the JRest, so, again, be carefull and never let JRest waiter to do something critical.  
 
 ## Anything?
 

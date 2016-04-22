@@ -1,20 +1,21 @@
-package cz.martlin.jrest.protocol.serializers;
+package cz.martlin.jrest.protocol.serializers.simple;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import cz.martlin.jrest.misc.JRestException;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
-import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
+import cz.martlin.jrest.protocol.serializers.simple.SimplesBasicLinedSerializer;
 
 public class BasicLinedSerializerTest {
-	private final BasicLinedSerializer serializer = new BasicLinedSerializer();
+	private final SimplesBasicLinedSerializer serializer = new SimplesBasicLinedSerializer();
 
 	@Test
 	public void testSerializeResponse() throws JRestException {
-		JRestResponse response = new JRestResponse(ResponseStatus.WARN, "Lorem Ipsum", "Data incomplete");
+		SimpleResponse response = new SimpleResponse(ResponseStatus.WARN, "Lorem Ipsum", "Data incomplete");
 		String expected = "WARN\n" + //
 				"Data incomplete\n" + //
 				"Lorem Ipsum";
@@ -26,13 +27,13 @@ public class BasicLinedSerializerTest {
 		String response = "OK\n" + //
 				"today\n" + //
 				"foo bar baz";
-		JRestResponse expected = new JRestResponse(ResponseStatus.OK, "foo bar baz", "today");
+		SimpleResponse expected = new SimpleResponse(ResponseStatus.OK, "foo bar baz", "today");
 		assertEquals(expected, serializer.deserializeResponse(response));
 	}
 
 	@Test
 	public void testSerializeRequest() throws JRestException {
-		JRestRequest request = new JRestRequest("gimme", "lorem ipsum");
+		SimpleRequest request = new SimpleRequest("gimme", "lorem ipsum");
 		String expected = "gimme\n" + //
 				"lorem ipsum";
 		assertEquals(expected, serializer.serializeRequest(request));
@@ -43,7 +44,7 @@ public class BasicLinedSerializerTest {
 		String request = "get-newest\n" + //
 				"foobar.txt\n" + //
 				"content of file";
-		JRestRequest expected = new JRestRequest("get-newest", "foobar.txt", "content of file");
+		SimpleRequest expected = new SimpleRequest("get-newest", "foobar.txt", "content of file");
 		assertEquals(expected, serializer.deserializeRequest(request));
 	}
 

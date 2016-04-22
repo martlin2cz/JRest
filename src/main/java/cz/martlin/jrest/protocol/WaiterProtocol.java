@@ -2,6 +2,8 @@ package cz.martlin.jrest.protocol;
 
 import java.util.List;
 
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
 import cz.martlin.jrest.waiter.RequestHandler;
@@ -12,7 +14,7 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public interface WaiterProtocol {
+public interface WaiterProtocol<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 
 	/**
 	 * Returns port of the communication.
@@ -26,19 +28,19 @@ public interface WaiterProtocol {
 	 * 
 	 * @return
 	 */
-	public RequestSerializer getRequestDeserializer();
+	public RequestSerializer<RQT> getRequestDeserializer();
 
 	/**
 	 * Returns serializer of responses.
 	 * 
 	 * @return
 	 */
-	public ResponseSerializer getReponseSerializer();
+	public ResponseSerializer<RST> getReponseSerializer();
 
 	/**
 	 * Returns list of request handlers.
 	 * 
 	 * @return
 	 */
-	public List<RequestHandler> getHandlers();
+	public List<RequestHandler<RQT, RST>> getHandlers();
 }

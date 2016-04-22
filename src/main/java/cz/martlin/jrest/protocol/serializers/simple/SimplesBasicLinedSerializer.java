@@ -1,12 +1,12 @@
-package cz.martlin.jrest.protocol.serializers;
+package cz.martlin.jrest.protocol.serializers.simple;
 
 import cz.martlin.jrest.protocol.encoders.NoopEncoder;
 import cz.martlin.jrest.protocol.misc.StringEncoder;
 
 /**
  * Represents the simplest serializer. All data items are written with no
- * specific encoding (in fact by {@link NoopEncoder} {@link #ENCODER}), each item on each line (in
- * fact separated by {@link #SEPARATOR}).
+ * specific encoding (in fact by {@link NoopEncoder} {@link #ENCODER}), each
+ * item on each line (in fact separated by {@link #SEPARATOR}).
  * 
  * <pre>
  * Request format: 
@@ -20,12 +20,12 @@ import cz.martlin.jrest.protocol.misc.StringEncoder;
  * 
  * @author martin
  */
-public class BasicLinedSerializer extends SimpleSerializerImpl {
+public class SimplesBasicLinedSerializer extends SimplesSeparatedSerializer {
 
 	private static final StringEncoder ENCODER = new NoopEncoder();
 	private static final String SEPARATOR = "\n";
 
-	public BasicLinedSerializer() {
+	public SimplesBasicLinedSerializer() {
 		super(ENCODER, SEPARATOR);
 	}
 

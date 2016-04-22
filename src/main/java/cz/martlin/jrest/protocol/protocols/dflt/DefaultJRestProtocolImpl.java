@@ -5,9 +5,11 @@ import java.util.List;
 import cz.martlin.jrest.protocol.GuestProtocol;
 import cz.martlin.jrest.protocol.WaiterProtocol;
 import cz.martlin.jrest.protocol.protocols.BaseProtocolImpl;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
-import cz.martlin.jrest.protocol.serializers.ReqRespSerializer;
+import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
@@ -16,20 +18,24 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class DefaultJRestProtocolImpl extends BaseProtocolImpl implements GuestProtocol, WaiterProtocol {
+public class DefaultJRestProtocolImpl<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> //
+		extends BaseProtocolImpl<RQT, RST> //
+		implements GuestProtocol<RQT, RST>, WaiterProtocol<RQT, RST> {
 
 	private final String host;
-	private final List<RequestHandler> handlers;
+	private final List<RequestHandler<RQT, RST>> handlers;
 
-	public DefaultJRestProtocolImpl(int port, String host, RequestSerializer requestSerializer,
-			ResponseSerializer responseSerializer, List<RequestHandler> handlers) {
+	public DefaultJRestProtocolImpl(int port, String host, //
+			RequestSerializer<RQT> requestSerializer, ResponseSerializer<RST> responseSerializer, //
+			List<RequestHandler<RQT, RST>> handlers) {
 		super(port, requestSerializer, responseSerializer);
 		this.host = host;
 		this.handlers = handlers;
 	}
 
-	public DefaultJRestProtocolImpl(int port, String host, ReqRespSerializer serializer,
-			List<RequestHandler> handlers) {
+	public DefaultJRestProtocolImpl(int port, String host, //
+			ReqRespSerializer<RQT, RST> serializer, //
+			List<RequestHandler<RQT, RST>> handlers) {
 		super(port, serializer, serializer);
 		this.host = host;
 		this.handlers = handlers;
@@ -41,27 +47,27 @@ public class DefaultJRestProtocolImpl extends BaseProtocolImpl implements GuestP
 	}
 
 	@Override
-	public List<RequestHandler> getHandlers() {
+	public List<RequestHandler<RQT, RST>> getHandlers() {
 		return handlers;
 	}
 
 	@Override
-	public RequestSerializer getRequestSerializer() {
+	public RequestSerializer<RQT> getRequestSerializer() {
 		return getTheRequestSerializer();
 	}
 
 	@Override
-	public RequestSerializer getRequestDeserializer() {
+	public RequestSerializer<RQT> getRequestDeserializer() {
 		return getTheRequestSerializer();
 	}
 
 	@Override
-	public ResponseSerializer getReponseSerializer() {
+	public ResponseSerializer<RST> getReponseSerializer() {
 		return getTheResponseSerializer();
 	}
 
 	@Override
-	public ResponseSerializer getReponseDeserializer() {
+	public ResponseSerializer<RST> getReponseDeserializer() {
 		return getTheResponseSerializer();
 	}
 
@@ -82,7 +88,7 @@ public class DefaultJRestProtocolImpl extends BaseProtocolImpl implements GuestP
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DefaultJRestProtocolImpl other = (DefaultJRestProtocolImpl) obj;
+		DefaultJRestProtocolImpl<?, ?> other = (DefaultJRestProtocolImpl<?, ?>) obj;
 		if (handlers == null) {
 			if (other.handlers != null)
 				return false;

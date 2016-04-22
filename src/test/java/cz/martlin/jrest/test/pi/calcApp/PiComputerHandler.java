@@ -2,9 +2,9 @@ package cz.martlin.jrest.test.pi.calcApp;
 
 import java.util.List;
 
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
-import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.test.pi.calculator.PiAproxComputer;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
@@ -24,7 +24,7 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class PiComputerHandler implements RequestHandler {
+public class PiComputerHandler implements RequestHandler<SimpleRequest, SimpleResponse> {
 
 	public static final String GIMME_PI_COMMAND = "gimme-current-pi";
 	public static final String GIMME_N_COMMAND = "gimme-current-n";
@@ -40,15 +40,15 @@ public class PiComputerHandler implements RequestHandler {
 	}
 
 	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
+	public void initialize(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
+	public void finish(JRestWaiter<SimpleRequest, SimpleResponse> waiter) throws Exception {
 	}
 
 	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
+	public SimpleResponse handle(SimpleRequest request) throws Exception {
 		if (GIMME_PI_COMMAND.equals(request.getCommand())) {
 			return handleGimmePi(request.getArguments());
 		}
@@ -82,7 +82,7 @@ public class PiComputerHandler implements RequestHandler {
 	 * @param arguments
 	 * @return
 	 */
-	private JRestResponse handleGimmePi(List<String> arguments) {
+	private SimpleResponse handleGimmePi(List<String> arguments) {
 		int size = 8;
 
 		ResponseStatus status = ResponseStatus.OK;
@@ -101,7 +101,7 @@ public class PiComputerHandler implements RequestHandler {
 		double value = computer.getCurrentPi();
 		String data = String.format("%1." + size + "f", value);
 
-		return new JRestResponse(status, data, meta);
+		return new SimpleResponse(status, data, meta);
 	}
 
 	/**
@@ -109,13 +109,13 @@ public class PiComputerHandler implements RequestHandler {
 	 * 
 	 * @return
 	 */
-	private JRestResponse handleGimmeN() {
+	private SimpleResponse handleGimmeN() {
 		String meta = getStatus();
 
 		int value = computer.getCurrentN();
 		String data = Integer.toString(value);
 
-		return new JRestResponse(ResponseStatus.OK, data, meta);
+		return SimpleResponse.ok(data, meta);
 	}
 
 	/**
@@ -123,9 +123,9 @@ public class PiComputerHandler implements RequestHandler {
 	 * 
 	 * @return
 	 */
-	private JRestResponse handleIsRunning() {
+	private SimpleResponse handleIsRunning() {
 		String data = computer.isRunning() ? "yes" : "no";
-		return JRestResponse.ok(data);
+		return SimpleResponse.ok(data);
 	}
 
 	/**
@@ -133,14 +133,14 @@ public class PiComputerHandler implements RequestHandler {
 	 * 
 	 * @return
 	 */
-	private JRestResponse handleCompleteInfo() {
+	private SimpleResponse handleCompleteInfo() {
 		synchronized (computer) {
 			String data = "[" + //
 					"'isRunning': " + computer.isRunning() + ", " + //
 					"'currentN': " + computer.getCurrentN() + ", " + //
 					"'currentPi': " + computer.getCurrentPi() + //
 					"]";
-			return JRestResponse.ok(data);
+			return SimpleResponse.ok(data);
 		}
 
 	}
@@ -150,14 +150,14 @@ public class PiComputerHandler implements RequestHandler {
 	 * 
 	 * @return
 	 */
-	private JRestResponse handleStop() {
+	private SimpleResponse handleStop() {
 		String meta = getStatus();
 
 		computer.stopTheThread();
 
 		String data = getStatus();
 
-		return new JRestResponse(ResponseStatus.OK, data, meta);
+		return SimpleResponse.ok(data, meta);
 	}
 
 	/**
@@ -165,14 +165,14 @@ public class PiComputerHandler implements RequestHandler {
 	 * 
 	 * @return
 	 */
-	private JRestResponse handleStart() {
+	private SimpleResponse handleStart() {
 		String meta = getStatus();
 
 		computer.startInThread();
 
 		String data = getStatus();
 
-		return new JRestResponse(ResponseStatus.OK, data, meta);
+		return SimpleResponse.ok(data, meta);
 	}
 
 	/**

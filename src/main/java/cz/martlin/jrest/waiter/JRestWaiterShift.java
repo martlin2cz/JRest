@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.protocol.WaiterProtocol;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
  * Represents shift of {@link JRestWaiter}. The shift can be started and stoped
@@ -16,11 +18,11 @@ import cz.martlin.jrest.protocol.WaiterProtocol;
  * @author martin
  *
  */
-public class JRestWaiterShift {
+public class JRestWaiterShift<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final JRestWaiter waiter;
-	private final WaiterThread thread;
+	private final JRestWaiter<RQT, RST> waiter;
+	private final WaiterThread<RQT, RST> thread;
 
 	/**
 	 * Creates instance with given protocol.
@@ -28,9 +30,9 @@ public class JRestWaiterShift {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiterShift(WaiterProtocol protocol) {
-		this.waiter = new JRestWaiter(protocol);
-		this.thread = new WaiterThread(waiter);
+	public JRestWaiterShift(WaiterProtocol<RQT, RST> protocol) {
+		this.waiter = new JRestWaiter<>(protocol);
+		this.thread = new WaiterThread<>(waiter);
 	}
 
 	/**
@@ -39,9 +41,9 @@ public class JRestWaiterShift {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiterShift(JRestWaiter waiter) {
+	public JRestWaiterShift(JRestWaiter<RQT, RST> waiter) {
 		this.waiter = waiter;
-		this.thread = new WaiterThread(waiter);
+		this.thread = new WaiterThread<>(waiter);
 	}
 
 	/**

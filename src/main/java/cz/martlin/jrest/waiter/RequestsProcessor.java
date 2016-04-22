@@ -7,12 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.WaiterProtocol;
-import cz.martlin.jrest.protocol.handlers.UnhandledReqsHandler;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
-import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
+import cz.martlin.jrest.protocol.reqresps.simple.ResponseStatus;
 
 /**
  * Implements work of deserialization of requests, processing and serialization
@@ -21,14 +20,12 @@ import cz.martlin.jrest.protocol.reqresp.ResponseStatus;
  * @author martin
  *
  */
-public class RequestsProcessor {
+public class RequestsProcessor<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private static final UnhandledReqsHandler DEFAULT_HANDLER = new UnhandledReqsHandler();
-
-	private final RequestSerializer requestSerializer;
-	private final ResponseSerializer responseSerializer;
-	private final List<RequestHandler> handlers;
+	private final RequestSerializer<RQT> requestSerializer;
+	private final ResponseSerializer<RST> responseSerializer;
+	private final List<RequestHandler<RQT, RST>> handlers;
 
 	/**
 	 * Creates instance of given params.
@@ -37,8 +34,8 @@ public class RequestsProcessor {
 	 * @param responseSerializer
 	 * @param handlers
 	 */
-	public RequestsProcessor(RequestSerializer requestSerializer, ResponseSerializer responseSerializer,
-			List<RequestHandler> handlers) {
+	public RequestsProcessor(RequestSerializer<RQT> requestSerializer, ResponseSerializer<RST> responseSerializer,
+			List<RequestHandler<RQT, RST>> handlers) {
 		super();
 		this.requestSerializer = requestSerializer;
 		this.responseSerializer = responseSerializer;
@@ -50,9 +47,9 @@ public class RequestsProcessor {
 	 * 
 	 * @param waiter
 	 */
-	public void initialize(JRestWaiter waiter) {
+	public void initialize(JRestWaiter<RQT, RST> waiter) {
 		log.trace("Initializing");
-		for (RequestHandler handler : handlers) {
+		for (RequestHandler<RQT, RST> handler : handlers) {
 			try {
 				handler.initialize(waiter);
 			} catch (Exception e) {
@@ -67,9 +64,9 @@ public class RequestsProcessor {
 	 * 
 	 * @param waiter
 	 */
-	public void finish(JRestWaiter waiter) {
+	public void finish(JRestWaiter<RQT, RST> waiter) {
 		log.trace("Finishing");
-		for (RequestHandler handler : handlers) {
+		for (RequestHandler<RQT, RST> handler : handlers) {
 			try {
 				handler.finish(waiter);
 			} catch (Exception e) {
@@ -90,10 +87,10 @@ public class RequestsProcessor {
 	public String processWithEncoding(String request) {
 		try {
 			log.trace("Deserializing request: {}", request);
-			JRestRequest req = requestSerializer.deserializeRequest(request);
+			RQT req = requestSerializer.deserializeRequest(request);
 
 			log.debug("Processing request: {}", req);
-			JRestResponse resp = process(req);
+			RST resp = process(req);
 
 			log.trace("Serializing response: {}", resp);
 			String response = responseSerializer.serializeResponse(resp);
@@ -117,7 +114,7 @@ public class RequestsProcessor {
 		String message = "An error occured during the request processing. " + "The exception: " + exception.toString()
 				+ ", caused by " + exception.toString();
 
-		JRestResponse response = JRestResponse.fatal(message);
+		RST response = null; // TODO FIXME JRestDefaultResponse.fatal(message);
 		try {
 			return responseSerializer.serializeResponse(response);
 		} catch (JRestException e) {
@@ -134,10 +131,10 @@ public class RequestsProcessor {
 	 * @return
 	 * @throws JRestException
 	 */
-	private JRestResponse process(JRestRequest request) throws JRestException {
-		for (RequestHandler handler : handlers) {
+	private RST process(RQT request) throws JRestException {
+		for (RequestHandler<RQT, RST> handler : handlers) {
 			try {
-				JRestResponse response = handler.handle(request);
+				RST response = handler.handle(request);
 				if (response != null) {
 					return response;
 				}
@@ -146,7 +143,9 @@ public class RequestsProcessor {
 			}
 		}
 
-		return DEFAULT_HANDLER.handleQuietly(request);
+		throw new JRestException("Found no handler for request: " + request);
+		// TODO like this?
+		// return DEFAULT_HANDLER.handleQuietly(request);
 	}
 
 	/**
@@ -155,8 +154,9 @@ public class RequestsProcessor {
 	 * @param protocol
 	 * @return
 	 */
-	public static RequestsProcessor create(WaiterProtocol protocol) {
-		return new RequestsProcessor(//
+	public static <RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> //
+	RequestsProcessor<RQT, RST> create(WaiterProtocol<RQT, RST> protocol) {
+		return new RequestsProcessor<RQT, RST>(//
 				protocol.getRequestDeserializer(), //
 				protocol.getReponseSerializer(), //
 				protocol.getHandlers());

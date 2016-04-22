@@ -1,5 +1,7 @@
 package cz.martlin.jrest.protocol.protocols;
 
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
 
@@ -9,12 +11,12 @@ import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
  * @author martin
  *
  */
-public class BaseProtocolImpl {
+public class BaseProtocolImpl<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 
 	protected final int port;
 
-	protected final RequestSerializer requestSerializer;
-	protected final ResponseSerializer responseSerializer;
+	protected final RequestSerializer<RQT> requestSerializer;
+	protected final ResponseSerializer<RST> responseSerializer;
 
 	/**
 	 * Creates instance of given params.
@@ -23,7 +25,8 @@ public class BaseProtocolImpl {
 	 * @param requestSerializer
 	 * @param responseSerializer
 	 */
-	public BaseProtocolImpl(int port, RequestSerializer requestSerializer, ResponseSerializer responseSerializer) {
+	public BaseProtocolImpl(int port, RequestSerializer<RQT> requestSerializer,
+			ResponseSerializer<RST> responseSerializer) {
 		super();
 		this.port = port;
 		this.requestSerializer = requestSerializer;
@@ -34,11 +37,11 @@ public class BaseProtocolImpl {
 		return port;
 	}
 
-	public RequestSerializer getTheRequestSerializer() {
+	public RequestSerializer<RQT> getTheRequestSerializer() {
 		return requestSerializer;
 	}
 
-	public ResponseSerializer getTheResponseSerializer() {
+	public ResponseSerializer<RST> getTheResponseSerializer() {
 		return responseSerializer;
 	}
 
@@ -60,7 +63,7 @@ public class BaseProtocolImpl {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BaseProtocolImpl other = (BaseProtocolImpl) obj;
+		BaseProtocolImpl<?, ?> other = (BaseProtocolImpl<?, ?>) obj;
 		if (port != other.port)
 			return false;
 		if (requestSerializer == null) {

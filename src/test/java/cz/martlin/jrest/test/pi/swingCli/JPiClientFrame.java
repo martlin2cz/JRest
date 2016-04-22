@@ -16,8 +16,8 @@ import javax.swing.JScrollPane;
 
 import cz.martlin.jrest.guest.JRestGuest;
 import cz.martlin.jrest.misc.JRestException;
-import cz.martlin.jrest.protocol.reqresp.JRestRequest;
-import cz.martlin.jrest.protocol.reqresp.JRestResponse;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.test.pi.calcApp.PiComputerHandler;
 
 /**
@@ -30,7 +30,7 @@ public class JPiClientFrame extends JFrame {
 
 	private static final long serialVersionUID = -1311504008246241895L;
 
-	private final JRestGuest guest;
+	private final JRestGuest<SimpleRequest, SimpleResponse> guest;
 
 	private JLabel headerLbl;
 
@@ -46,7 +46,7 @@ public class JPiClientFrame extends JFrame {
 	private JButton getNButt;
 	private JButton isRunningButt;
 
-	public JPiClientFrame(JRestGuest guest) {
+	public JPiClientFrame(JRestGuest<SimpleRequest, SimpleResponse> guest) {
 		super("JPiClientApp");
 
 		this.guest = guest;
@@ -62,7 +62,7 @@ public class JPiClientFrame extends JFrame {
 	 * Initializes components of the frame.
 	 */
 	private void initializeComponents() {
-		headerLbl = new JLabel("<html><p>Click buttons down the frame to invoke some requests. "
+		headerLbl = new JLabel("<html><RQT, RST>Click buttons down the frame to invoke some requests. "
 				+ "In list bellow will be listed data fields of responses. "
 				+ "Complete responses will be printed to stdout.</p></html>");
 		getContentPane().add(headerLbl, BorderLayout.NORTH);
@@ -121,8 +121,8 @@ public class JPiClientFrame extends JFrame {
 	 * @return
 	 */
 	private String askRunningAndGetLabel() {
-		JRestRequest req = new JRestRequest(PiComputerHandler.IS_RUNNING_COMMAND);
-		JRestResponse resp;
+		SimpleRequest req = new SimpleRequest(PiComputerHandler.IS_RUNNING_COMMAND);
+		SimpleResponse resp;
 		try {
 			resp = guest.sendRequest(req);
 		} catch (JRestException e) {
@@ -145,9 +145,9 @@ public class JPiClientFrame extends JFrame {
 	 * 
 	 * @param request
 	 */
-	protected void sendAndHandle(JRestRequest request) {
+	protected void sendAndHandle(SimpleRequest request) {
 		try {
-			JRestResponse response = guest.sendRequest(request);
+			SimpleResponse response = guest.sendRequest(request);
 
 			handleResponse(response, request);
 
@@ -165,7 +165,7 @@ public class JPiClientFrame extends JFrame {
 	 * @param resp
 	 * @param req
 	 */
-	private void handleResponse(JRestResponse resp, JRestRequest req) {
+	private void handleResponse(SimpleResponse resp, SimpleRequest req) {
 		System.out.println("Response: " + resp);
 		model.addElement(resp.getData());
 
@@ -191,7 +191,7 @@ public class JPiClientFrame extends JFrame {
 	 * @param resp
 	 * @param req
 	 */
-	private void setToggleButtText(JRestResponse resp, JRestRequest req) {
+	private void setToggleButtText(SimpleResponse resp, SimpleRequest req) {
 
 		if (req.getCommand().equals(PiComputerHandler.COMPLETE_INFO_COMMAND)) {
 			return;
@@ -253,7 +253,7 @@ public class JPiClientFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRestRequest request = new JRestRequest("gimme-current-n");
+			SimpleRequest request = new SimpleRequest("gimme-current-n");
 			sendAndHandle(request);
 		}
 
@@ -269,7 +269,7 @@ public class JPiClientFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRestRequest request = new JRestRequest("gimme-current-pi", Integer.toString(20));
+			SimpleRequest request = new SimpleRequest("gimme-current-pi", Integer.toString(20));
 			sendAndHandle(request);
 		}
 
@@ -285,7 +285,7 @@ public class JPiClientFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRestRequest request = new JRestRequest("gimme-current-pi");
+			SimpleRequest request = new SimpleRequest("gimme-current-pi");
 			sendAndHandle(request);
 		}
 
@@ -301,7 +301,7 @@ public class JPiClientFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRestRequest request = new JRestRequest(PiComputerHandler.IS_RUNNING_COMMAND);
+			SimpleRequest request = new SimpleRequest(PiComputerHandler.IS_RUNNING_COMMAND);
 			sendAndHandle(request);
 		}
 
@@ -317,7 +317,7 @@ public class JPiClientFrame extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JRestRequest request = new JRestRequest(PiComputerHandler.COMPLETE_INFO_COMMAND);
+			SimpleRequest request = new SimpleRequest(PiComputerHandler.COMPLETE_INFO_COMMAND);
 			sendAndHandle(request);
 		}
 
@@ -335,13 +335,13 @@ public class JPiClientFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			JButton toggleButt = (JButton) e.getSource();
 
-			JRestRequest request;
+			SimpleRequest request;
 
 			if (toggleButt.getText().equals("Start")) {
-				request = new JRestRequest(PiComputerHandler.START_COMMAND);
+				request = new SimpleRequest(PiComputerHandler.START_COMMAND);
 
 			} else if (toggleButt.getText().equals("Stop")) {
-				request = new JRestRequest(PiComputerHandler.STOP_COMMAND);
+				request = new SimpleRequest(PiComputerHandler.STOP_COMMAND);
 
 			} else {
 				throw new IllegalStateException("Unknown state");

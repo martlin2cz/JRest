@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import cz.martlin.jrest.misc.Interruptable;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.WaiterProtocol;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
  * Represents waiter in JRest. The waiter accepts and processes commands from
@@ -14,11 +16,11 @@ import cz.martlin.jrest.protocol.WaiterProtocol;
  * @author martin
  *
  */
-public class JRestWaiter implements Interruptable {
+public class JRestWaiter<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> implements Interruptable {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 
-	private final WaiterProtocol protocol;
-	private final RequestsProcessor processor;
+	private final WaiterProtocol<RQT, RST> protocol;
+	private final RequestsProcessor<RQT, RST> processor;
 
 	private JRestServer server;
 	private boolean interrupted;
@@ -29,7 +31,7 @@ public class JRestWaiter implements Interruptable {
 	 * @param protocol
 	 * @param processor
 	 */
-	public JRestWaiter(WaiterProtocol protocol) {
+	public JRestWaiter(WaiterProtocol<RQT, RST> protocol) {
 		this.protocol = protocol;
 		this.processor = RequestsProcessor.create(protocol);
 	}
@@ -72,7 +74,7 @@ public class JRestWaiter implements Interruptable {
 	 * @param processor
 	 * @param server
 	 */
-	private void runServer(RequestsProcessor processor, JRestServer server) {
+	private void runServer(RequestsProcessor<RQT, RST> processor, JRestServer server) {
 		processor.initialize(this);
 
 		while (!interrupted) {

@@ -1,16 +1,20 @@
-package cz.martlin.jrest.protocol.reqresp;
+package cz.martlin.jrest.protocol.reqresps.simple;
+
+import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
- * JRest Response is the answer to {@link JRestRequest}. The response is defined
- * by its status, data part and metadata part. The status specifies if the
- * processing of the request have been successfully completed or not. The data
- * field contains real data sent from the server. The metadata field contains
- * additional informations, like date of data or - the error/warning message.
+ * JRest Response is the answer to {@link SimpleRequest}. The response is
+ * defined by its status, data part and metadata part. The status specifies if
+ * the processing of the request have been successfully completed or not. The
+ * data field contains real data sent from the server. The metadata field
+ * contains additional informations, like date of data or - the error/warning
+ * message.
  * 
  * @author martin
  *
  */
-public class JRestResponse {
+public class SimpleResponse implements JRestAbstractResponse {
+
 	private final ResponseStatus status;
 	private final String data;
 	private final String meta;
@@ -23,13 +27,18 @@ public class JRestResponse {
 	 * @param data
 	 * @param meta
 	 */
-	public JRestResponse(ResponseStatus status, String data, String meta) {
+	public SimpleResponse(ResponseStatus status, String data, String meta) {
 		super();
 		this.status = status;
 		this.data = data;
 		this.meta = meta;
 	}
 
+	/**
+	 * Returns the response status (ok, warning, error or fatal error).
+	 * 
+	 * @return
+	 */
 	public ResponseStatus getStatus() {
 		return status;
 	}
@@ -44,10 +53,20 @@ public class JRestResponse {
 		return this.status.equals(status);
 	}
 
+	/**
+	 * Returns the data part of the response.
+	 * 
+	 * @return
+	 */
 	public String getData() {
 		return data;
 	}
 
+	/**
+	 * Returns the metadata part of the response.
+	 * 
+	 * @return
+	 */
 	public String getMeta() {
 		return meta;
 	}
@@ -70,7 +89,7 @@ public class JRestResponse {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		JRestResponse other = (JRestResponse) obj;
+		SimpleResponse other = (SimpleResponse) obj;
 		if (data == null) {
 			if (other.data != null)
 				return false;
@@ -97,8 +116,18 @@ public class JRestResponse {
 	 * @param data
 	 * @return
 	 */
-	public static JRestResponse ok(String data) {
-		return new JRestResponse(ResponseStatus.OK, data, "");
+	public static SimpleResponse ok(String data) {
+		return new SimpleResponse(ResponseStatus.OK, data, "");
+	}
+
+	/**
+	 * Constructs "OK" response with given data and metadata.
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static SimpleResponse ok(String data, String meta) {
+		return new SimpleResponse(ResponseStatus.OK, data, meta);
 	}
 
 	/**
@@ -108,20 +137,32 @@ public class JRestResponse {
 	 * @param aditionalInfo
 	 * @return
 	 */
-	public static JRestResponse warn(String data, String aditionalInfo) {
-		return new JRestResponse(ResponseStatus.WARN, data, aditionalInfo);
+	public static SimpleResponse warn(String data, String aditionalInfo) {
+		return new SimpleResponse(ResponseStatus.WARN, data, aditionalInfo);
 	}
 
 	/**
-	 * Constructs "ERROR" response with given data (if some) and given error
-	 * message as metadata.
+	 * Constructs "ERROR" response with no data and given error message as
+	 * metadata.
 	 * 
 	 * @param data
 	 * @param error
 	 * @return
 	 */
-	public static JRestResponse error(String data, String error) {
-		return new JRestResponse(ResponseStatus.ERROR, data, error);
+	public static SimpleResponse error(String error) {
+		return new SimpleResponse(ResponseStatus.ERROR, "", error);
+	}
+
+	/**
+	 * Constructs "ERROR" response with given data and given error message as
+	 * metadata.
+	 * 
+	 * @param data
+	 * @param error
+	 * @return
+	 */
+	public static SimpleResponse error(String data, String error) {
+		return new SimpleResponse(ResponseStatus.ERROR, data, error);
 	}
 
 	/**
@@ -130,8 +171,8 @@ public class JRestResponse {
 	 * @param message
 	 * @return
 	 */
-	public static JRestResponse fatal(String message) {
-		return new JRestResponse(ResponseStatus.FATAL, "", message);
+	public static SimpleResponse fatal(String message) {
+		return new SimpleResponse(ResponseStatus.FATAL, "", message);
 	}
 
 }

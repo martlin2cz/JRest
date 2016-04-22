@@ -66,7 +66,7 @@ public class JRestServer implements Interruptable {
 	 * 
 	 * @param processor
 	 */
-	public void awaitAndProcess(RequestsProcessor processor) {
+	public void awaitAndProcess(RequestsProcessor<?, ?> processor) {
 		Socket sock = null;
 		try {
 			log.trace("Awaiting request");
@@ -115,7 +115,7 @@ public class JRestServer implements Interruptable {
 	 * @throws IOException
 	 * @throws JRestException
 	 */
-	private void processRequest(Socket sock, RequestsProcessor processor) throws IOException, JRestException {
+	private void processRequest(Socket sock, RequestsProcessor<?, ?> processor) throws IOException, JRestException {
 		InputStream ins = sock.getInputStream();
 		String request = Tools.read(ins);
 		log.debug("Processing request: " + request);

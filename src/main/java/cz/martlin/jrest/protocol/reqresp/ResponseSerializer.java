@@ -1,14 +1,15 @@
 package cz.martlin.jrest.protocol.reqresp;
 
 import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 
 /**
- * Serializer and deserializer of {@link JRestResponse} instances.
+ * Serializer and deserializer of {@link SimpleResponse} instances.
  * 
  * @author martin
  *
  */
-public interface ResponseSerializer {
+public interface ResponseSerializer<T extends JRestAbstractResponse> {
 
 	/**
 	 * Serializes given response.
@@ -17,7 +18,7 @@ public interface ResponseSerializer {
 	 * @return
 	 * @throws JRestException
 	 */
-	public String serializeResponse(JRestResponse response) throws JRestException;
+	public String serializeResponse(T response) throws JRestException;
 
 	/**
 	 * Deserializes given response.
@@ -26,6 +27,6 @@ public interface ResponseSerializer {
 	 * @return
 	 * @throws JRestException
 	 */
-	public JRestResponse deserializeResponse(String serialized) throws JRestException;
+	public T deserializeResponse(String serialized) throws JRestException;
 
 }

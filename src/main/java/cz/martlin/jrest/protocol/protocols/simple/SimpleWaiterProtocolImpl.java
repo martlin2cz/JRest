@@ -1,6 +1,8 @@
 package cz.martlin.jrest.protocol.protocols.simple;
 
 import cz.martlin.jrest.protocol.protocols.dflt.DefaultWaiterProtocolImpl;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleRequest;
+import cz.martlin.jrest.protocol.reqresps.simple.SimpleResponse;
 import cz.martlin.jrest.waiter.RequestHandler;
 
 /**
@@ -10,7 +12,7 @@ import cz.martlin.jrest.waiter.RequestHandler;
  * @author martin
  *
  */
-public class SimpleWaiterProtocolImpl extends DefaultWaiterProtocolImpl {
+public class SimpleWaiterProtocolImpl extends DefaultWaiterProtocolImpl<SimpleRequest, SimpleResponse> {
 
 	/**
 	 * Creates simple waiter protocol with given port and (one) processor.
@@ -18,7 +20,7 @@ public class SimpleWaiterProtocolImpl extends DefaultWaiterProtocolImpl {
 	 * @param port
 	 * @param processor
 	 */
-	public SimpleWaiterProtocolImpl(int port, RequestHandler processor) {
+	public SimpleWaiterProtocolImpl(int port, RequestHandler<SimpleRequest, SimpleResponse> processor) {
 		super(port, SimpleJRestProtocolImpl.SERIALIZER, SimpleJRestProtocolImpl.init(processor));
 	}
 
@@ -28,7 +30,8 @@ public class SimpleWaiterProtocolImpl extends DefaultWaiterProtocolImpl {
 	 * @param port
 	 * @param processors
 	 */
-	public SimpleWaiterProtocolImpl(int port, RequestHandler... processors) {
+	@SafeVarargs
+	public SimpleWaiterProtocolImpl(int port, RequestHandler<SimpleRequest, SimpleResponse>... processors) {
 		super(port, SimpleJRestProtocolImpl.SERIALIZER, SimpleJRestProtocolImpl.init(processors));
 	}
 
