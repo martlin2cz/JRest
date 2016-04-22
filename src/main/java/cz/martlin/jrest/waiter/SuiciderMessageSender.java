@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.martlin.jrest.guest.JRestClient;
+import cz.martlin.jrest.impl.simple.handlers.StopWaiterCommandHandler;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.WaiterProtocol;
-import cz.martlin.jrest.protocol.handlers.simple.StopWaiterCommandHandler;
 
 /**
  * When the waiter's server is interrupted directly (not by interrupting

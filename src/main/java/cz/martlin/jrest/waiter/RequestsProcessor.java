@@ -5,13 +5,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.martlin.jrest.impl.simple.reqresps.ResponseStatus;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.WaiterProtocol;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 import cz.martlin.jrest.protocol.reqresp.RequestSerializer;
 import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
-import cz.martlin.jrest.protocol.reqresps.simple.ResponseStatus;
 
 /**
  * Implements work of deserialization of requests, processing and serialization
