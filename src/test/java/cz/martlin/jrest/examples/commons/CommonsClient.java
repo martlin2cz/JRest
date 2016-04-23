@@ -14,7 +14,7 @@ public class CommonsClient {
 	private final SingleJarmilGuest guest;
 
 	public CommonsClient() {
-		guest = new SingleJarmilGuest(CommonsServiceApp.PORT, CommonsServiceApp.NAME, CommonsServiceApp.SERVICE);
+		guest = new SingleJarmilGuest(CommonsServiceApp.PROTOCOL);
 	}
 
 	public Calendar getCurrentDate() throws JRestException {

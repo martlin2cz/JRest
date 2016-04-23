@@ -19,12 +19,20 @@ import cz.martlin.jrest.waiter.RequestHandler;
  */
 public class JarmilProtocol extends DefaultJRestProtocolImpl<JarmilRequest, JarmilResponse> {
 
+	private final JarmilEnvironment environment;
+
 	public JarmilProtocol(int port, String host, JarmilEnvironment environment) {
 		super(port, host, initSerializer(environment), initHandler(environment));
+		this.environment = environment;
 	}
 
 	public JarmilProtocol(int port, JarmilEnvironment environment) {
 		super(port, DFLT_HOST, initSerializer(environment), initHandler(environment));
+		this.environment = environment;
+	}
+
+	public JarmilEnvironment getEnvironment() {
+		return environment;
 	}
 
 	private static ReqRespSerializer<JarmilRequest, JarmilResponse> initSerializer(JarmilEnvironment environment) {

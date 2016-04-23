@@ -1,5 +1,7 @@
 package cz.martlin.jrest.impl.jarmil;
 
+import cz.martlin.jrest.impl.jarmil.protocol.SingleJarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.protocol.SingleJarmilProtocol;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponseStatus;
@@ -15,39 +17,13 @@ import cz.martlin.jrest.misc.JRestException;
  */
 public class SingleJarmilGuest extends JarmilGuest {
 
-	private final Class<?> clazz;
-	private final String name;
-
-	public SingleJarmilGuest(int port, Class<?> clazz) {
-		super(SingleJarmilWaiterShift.createProtocol(port, //
-				SingleJarmilWaiterShift.createEnvironment(clazz)));
-
-		this.clazz = clazz;
-		this.name = null;
+	public SingleJarmilGuest(SingleJarmilProtocol protocol) {
+		super(protocol);
 	}
 
-	public SingleJarmilGuest(int port, String name, Object object) {
-		super(SingleJarmilWaiterShift.createProtocol(port, //
-				SingleJarmilWaiterShift.createEnvironment(name, object)));
-
-		this.clazz = object.getClass();
-		this.name = name;
-	}
-
-	public SingleJarmilGuest(int port, String host, Class<?> clazz) {
-		super(SingleJarmilWaiterShift.createProtocol(port, host, //
-				SingleJarmilWaiterShift.createEnvironment(clazz)));
-
-		this.clazz = clazz;
-		this.name = null;
-	}
-
-	public SingleJarmilGuest(int port, String host, String name, Object object) {
-		super(SingleJarmilWaiterShift.createProtocol(port, host, //
-				SingleJarmilWaiterShift.createEnvironment(name, object)));
-
-		this.clazz = object.getClass();
-		this.name = name;
+	@Override
+	public SingleJarmilProtocol getProtocol() {
+		return (SingleJarmilProtocol) super.getProtocol();
 	}
 
 	/**
@@ -61,15 +37,26 @@ public class SingleJarmilGuest extends JarmilGuest {
 	 * @throws JRestException
 	 */
 	public <T> T invoke(String method, Object... arguments) throws JRestException {
-		JarmilRequest request;
-		if (name != null) {
-			request = JarmilRequest.create(clazz, name, method, arguments);
-		} else {
-			request = JarmilRequest.create(clazz, method, arguments);
-		}
+		JarmilRequest request = createRequest(method, arguments);
 
 		JarmilResponse response = sendRequest(request);
 
+		return handleResponse(response);
+	}
+
+	private JarmilRequest createRequest(String method, Object... arguments) throws JRestException {
+		SingleJarmilEnvironment env = getProtocol().getEnvironment();
+
+		JarmilRequest request;
+		if (env.getClazz() != null) {
+			request = JarmilRequest.create(env.getClazz(), env.getName(), method, arguments);
+		} else {
+			request = JarmilRequest.create(env.getClazz(), method, arguments);
+		}
+		return request;
+	}
+
+	private <T> T handleResponse(JarmilResponse response) throws JRestException {
 		if (response.getStatus() == JarmilResponseStatus.OK) {
 			try {
 				@SuppressWarnings("unchecked")

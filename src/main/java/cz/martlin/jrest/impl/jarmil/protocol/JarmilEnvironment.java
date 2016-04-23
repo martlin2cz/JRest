@@ -43,6 +43,14 @@ public class JarmilEnvironment {
 		this.classes = classes;
 	}
 
+	protected Map<String, Object> getObjects() {
+		return objects;
+	}
+
+	protected Set<Class<?>> getClasses() {
+		return classes;
+	}
+
 	public void addObject(String name, Object object) {
 		objects.put(name, object);
 	}
