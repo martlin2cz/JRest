@@ -22,6 +22,8 @@ public class DefaultJRestProtocolImpl<RQT extends JRestAbstractRequest, RST exte
 		extends BaseProtocolImpl<RQT, RST> //
 		implements GuestProtocol<RQT, RST>, WaiterProtocol<RQT, RST> {
 
+	public static final String DFLT_HOST = "localhost";
+
 	private final String host;
 	private final List<RequestHandler<RQT, RST>> handlers;
 

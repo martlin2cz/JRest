@@ -21,4 +21,7 @@
 	<logger name="cz.martlin.jrest.guest.JRestClient" level="TRACE" />
 	
 
+	<logger name="cz.martlin.jrest.examples" level="INFO" />
+	
+
 </configuration>

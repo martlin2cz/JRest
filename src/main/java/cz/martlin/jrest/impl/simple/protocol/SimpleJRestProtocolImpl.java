@@ -24,7 +24,6 @@ import cz.martlin.jrest.waiter.RequestHandler;
  */
 public class SimpleJRestProtocolImpl extends DefaultJRestProtocolImpl<SimpleRequest, SimpleResponse> {
 
-	public static final String DFLT_HOST = "localhost";
 	public static final ReqRespSerializer<SimpleRequest, SimpleResponse> SERIALIZER = new SimplesShellLikeSerializer();
 
 	public SimpleJRestProtocolImpl(int port, RequestHandler<SimpleRequest, SimpleResponse> handler) {

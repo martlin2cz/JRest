@@ -6,14 +6,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
-import cz.martlin.jrest.impl.jarmil.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
 import cz.martlin.jrest.misc.JRestException;
 
@@ -23,9 +18,10 @@ public class JarmilShellLikeSerializerTest {
 	private final JarmilShellLikeSerializer serializer = createSerializer();
 
 	private static JarmilShellLikeSerializer createSerializer() {
-		Map<String, Object> env = new HashMap<>();
+		JarmilEnvironment env = new JarmilEnvironment();
 
-		env.put("my-double", 20.57);
+		env.addObject("my-double", 20.57);
+		env.addClass(Collections.class);
 
 		return new JarmilShellLikeSerializer(env);
 	}

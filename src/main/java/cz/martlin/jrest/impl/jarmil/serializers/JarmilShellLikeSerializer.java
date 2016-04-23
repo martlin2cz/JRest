@@ -3,11 +3,11 @@ package cz.martlin.jrest.impl.jarmil.serializers;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.martlin.jrest.impl.jarmil.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.JarmilResponse;
 import cz.martlin.jrest.impl.jarmil.JarmilResponseStatus;
@@ -22,9 +22,9 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	private static final MethodsFinder finder = new MethodsFinder();
 	private static final String NO_VALUE = " ";
 
-	private final Map<String, Object> environment;
+	private final JarmilEnvironment environment;
 
-	public JarmilShellLikeSerializer(Map<String, Object> environment) {
+	public JarmilShellLikeSerializer(JarmilEnvironment environment) {
 		this.environment = environment;
 	}
 
@@ -95,7 +95,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 			LOG.trace("Object not specified");
 			return null;
 		} else {
-			Object object = environment.get(objectName);
+			Object object = environment.findObject(objectName);
 			if (object == null) {
 				throw new IllegalStateException("Object of name " + objectName + " not found");
 			}
@@ -104,18 +104,23 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 		}
 	}
 
-	private Class<?> deserializeClass(String objectName, List<String> list) throws ClassNotFoundException {
+	private Class<?> deserializeClass(String objectName, List<String> list)
+			throws IllegalArgumentException, ClassNotFoundException {
+
 		String classSpec = list.get(0);
 
 		if (NO_VALUE.equals(classSpec)) {
 			LOG.trace("No class specified, will use the object's ");
-			Object object = environment.get(objectName);
+			Object object = environment.findObject(objectName);
 			if (object == null) {
 				throw new IllegalArgumentException("No such object: " + objectName);
 			}
 			return object.getClass();
 		} else {
 			Class<?> clazz = Class.forName(classSpec);
+			if (!environment.findClass(clazz)) {
+				throw new IllegalArgumentException("Unsupported class: " + clazz.getName());
+			}
 			LOG.trace("Specified class " + clazz.getName() + " found");
 			return clazz;
 		}
@@ -163,9 +168,13 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 			return request.getClazz().getName();
 		}
 
-		Object object = environment.get(name);
+		Object object = environment.findObject(name);
 		if (object == null) {
-			return request.getClazz().getName();
+			Class<?> clazz = request.getClazz();
+			if (!environment.findClass(clazz)) {
+				throw new IllegalArgumentException("Unsupported class: " + clazz.getName());
+			}
+			return clazz.getName();
 		}
 
 		return NO_VALUE;

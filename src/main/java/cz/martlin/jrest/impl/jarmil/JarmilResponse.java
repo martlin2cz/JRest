@@ -1,5 +1,6 @@
 package cz.martlin.jrest.impl.jarmil;
 
+import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 public class JarmilResponse implements JRestAbstractResponse {
@@ -78,5 +79,21 @@ public class JarmilResponse implements JRestAbstractResponse {
 		return new JarmilResponse(JarmilResponseStatus.OK, null, type);
 	}
 
-	// TODO others
+	public static JarmilResponse createUnknownTarget(String name) {
+		return new JarmilResponse(JarmilResponseStatus.UNKNOWN_TARGET, name, String.class);
+	}
+
+	public static JarmilResponse createUnknownObjectTarget(String name) {
+		return createUnknownTarget("Could not found object " + name + " or object not supported");
+	}
+
+	public static JarmilResponse createUnknownStaticTarget(Class<?> clazz) {
+		return createUnknownTarget("Could not found class " + clazz + " or class no supported");
+	}
+
+	public static JarmilResponse createIvocationError(JRestException e) {
+		return new JarmilResponse(JarmilResponseStatus.INVOCATION_FAILED, e, e.getClass());
+	}
+
+
 }
