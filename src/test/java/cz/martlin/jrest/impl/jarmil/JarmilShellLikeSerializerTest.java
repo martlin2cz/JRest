@@ -9,10 +9,10 @@ import java.util.Collections;
 
 import org.junit.Test;
 
+import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
-import cz.martlin.jrest.impl.jarmil.reqresp.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
 import cz.martlin.jrest.misc.JRestException;
 
@@ -84,14 +84,14 @@ public class JarmilShellLikeSerializerTest {
 
 	@Test
 	public void testSerializeResponse() throws JRestException, MalformedURLException {
-		JarmilResponse response1 = JarmilResponse.createNonullOk(42);
+		JarmilResponse response1 = JarmilResponse.createNonnullOk(42);
 
 		String expected1 = "OK 42 java.lang.Integer\n";
 		String actual1 = serializer.serializeResponse(response1);
 
 		assertEquals(expected1, actual1);
 
-		JarmilResponse response2 = JarmilResponse.createNonullOk(new URL("http://localhost"));
+		JarmilResponse response2 = JarmilResponse.createNonnullOk(new URL("http://localhost"));
 
 		String expected2 = "OK " + LOCALHOST_URL_SERIALIZED + " java.net.URL\n";
 		String actual2 = serializer.serializeResponse(response2);
@@ -103,14 +103,14 @@ public class JarmilShellLikeSerializerTest {
 	public void testDeserializeResponse() throws JRestException, MalformedURLException {
 		String ser1 = "OK 42 java.lang.Integer\n";
 
-		JarmilResponse expected1 = JarmilResponse.createNonullOk(42);
+		JarmilResponse expected1 = JarmilResponse.createNonnullOk(42);
 		JarmilResponse actual1 = serializer.deserializeResponse(ser1);
 
 		assertEquals(expected1, actual1);
 
 		String ser2 = "OK " + LOCALHOST_URL_SERIALIZED + " java.net.URL\n";
 
-		JarmilResponse expected2 = JarmilResponse.createNonullOk(new URL("http://localhost"));
+		JarmilResponse expected2 = JarmilResponse.createNonnullOk(new URL("http://localhost"));
 		JarmilResponse actual2 = serializer.deserializeResponse(ser2);
 
 		assertEquals(expected2, actual2);

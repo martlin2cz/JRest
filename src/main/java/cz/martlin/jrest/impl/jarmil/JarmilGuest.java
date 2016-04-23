@@ -6,6 +6,11 @@ import cz.martlin.jrest.impl.jarmil.protocol.JarmilProtocol;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 
+/**
+ * Implements custom, Jarmil specific guest.
+ * @author martin
+ *
+ */
 public class JarmilGuest extends JRestGuest<JarmilRequest, JarmilResponse> {
 
 	public JarmilGuest(JarmilProtocol protocol) {

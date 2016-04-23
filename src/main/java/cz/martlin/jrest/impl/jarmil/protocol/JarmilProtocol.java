@@ -11,6 +11,12 @@ import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
 import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 import cz.martlin.jrest.waiter.RequestHandler;
 
+/**
+ * Extends Default protocol to be more specific for Jarmil use.
+ * 
+ * @author martin
+ *
+ */
 public class JarmilProtocol extends DefaultJRestProtocolImpl<JarmilRequest, JarmilResponse> {
 
 	public JarmilProtocol(int port, String host, JarmilEnvironment environment) {

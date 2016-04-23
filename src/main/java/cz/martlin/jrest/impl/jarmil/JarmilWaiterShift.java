@@ -6,6 +6,11 @@ import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.waiter.JRestWaiterShift;
 
+/**
+ * Implements custom, Jarmil specific, Waiter shift
+ * @author martin
+ *
+ */
 public class JarmilWaiterShift extends JRestWaiterShift<JarmilRequest, JarmilResponse> {
 
 	public JarmilWaiterShift(JarmilProtocol protocol) {

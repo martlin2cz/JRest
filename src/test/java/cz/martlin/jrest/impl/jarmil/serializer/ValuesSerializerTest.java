@@ -11,19 +11,19 @@ public class ValuesSerializerTest {
 	private final ValuesSerializer serializer = new ValuesSerializer();
 
 	@Test
-	public void testSerialize() {
+	public void testSerialize() throws Exception {
 		assertEquals("42", serializer.serialize(42));
 		assertEquals("\"foo\"", serializer.serialize("foo"));
 	}
 
 	@Test
-	public void testDeserialize() {
+	public void testDeserialize() throws Exception {
 		assertEquals(42, serializer.deserialize("42"));
 		assertEquals("foo", serializer.deserialize("\"foo\""));
 	}
 
 	@Test
-	public void testTryInferType() {
+	public void testTryInferType() throws Exception {
 		assertEquals(Integer.class, serializer.tryInferType("42"));
 		assertEquals(String.class, serializer.tryInferType("\"foo\""));
 

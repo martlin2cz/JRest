@@ -4,9 +4,20 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
+import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
 
+/**
+ * Represents request in Jarmil implementation. Each request has a method name
+ * and parameters to be called with. Also contains "a target", which can be
+ * simply a class (with static methods) or a name of named object in waiter's
+ * {@link JarmilEnvironment}.
+ * 
+ * @author martin
+ *
+ */
 public class JarmilRequest implements JRestAbstractRequest {
 
 	private static final MethodsFinder finder = new MethodsFinder();
@@ -16,6 +27,14 @@ public class JarmilRequest implements JRestAbstractRequest {
 	private final Method method;
 	private final List<Object> parameters;
 
+	/**
+	 * If possible, use static fatory methods.
+	 * 
+	 * @param clazz
+	 * @param object
+	 * @param method
+	 * @param parameters
+	 */
 	public JarmilRequest(Class<?> clazz, String object, Method method, List<Object> parameters) {
 		super();
 		this.clazz = clazz;
@@ -24,6 +43,13 @@ public class JarmilRequest implements JRestAbstractRequest {
 		this.parameters = parameters;
 	}
 
+	/**
+	 * If possible, use static fatory methods.
+	 * 
+	 * @param clazz
+	 * @param method
+	 * @param parameters
+	 */
 	public JarmilRequest(Class<?> clazz, Method method, List<Object> parameters) {
 		super();
 		this.clazz = clazz;
@@ -32,6 +58,13 @@ public class JarmilRequest implements JRestAbstractRequest {
 		this.parameters = parameters;
 	}
 
+	/**
+	 * If possible, use static fatory methods.
+	 * 
+	 * @param object
+	 * @param method
+	 * @param parameters
+	 */
 	public JarmilRequest(String object, Method method, List<Object> parameters) {
 		super();
 		this.clazz = null;

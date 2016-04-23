@@ -4,6 +4,12 @@ import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 
+/**
+ * The class performing stopping of waiter to be used by {@link JarmilHandler}.
+ * 
+ * @author martin
+ *
+ */
 public class WaiterStopper {
 
 	public static final String METHOD_NAME = "stop";

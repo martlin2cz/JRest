@@ -7,13 +7,27 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.martlin.jrest.impl.jarmil.handlers.JarmilResponseStatus;
+import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
-import cz.martlin.jrest.impl.jarmil.reqresp.MethodsFinder;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponseStatus;
 import cz.martlin.jrest.protocol.serializers.BaseShellLikeSerializer;
 
+/**
+ * The {@link BaseShellLikeSerializer} for the {@link JarmilRequest} and
+ * {@link JarmilResponse}.
+ * 
+ * Uses the following format (for request and response):
+ * 
+ * <pre>
+ * [class] [object] [method] [arg 1] ... [arg n]
+ * [status] [value] [type]
+ * </pre>
+ * 
+ * @author martin
+ *
+ */
 public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilRequest, JarmilResponse> {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -29,7 +43,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	}
 
 	@Override
-	protected JarmilResponse listToResponse(List<String> list) throws ClassNotFoundException, IllegalArgumentException {
+	protected JarmilResponse listToResponse(List<String> list) throws Exception {
 
 		JarmilResponseStatus status = JarmilResponseStatus.valueOf(list.get(0));
 		Class<?> type = Class.forName(list.get(2));
@@ -39,7 +53,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	}
 
 	@Override
-	protected List<String> responseToList(JarmilResponse response) {
+	protected List<String> responseToList(JarmilResponse response) throws Exception {
 		List<String> list = new ArrayList<>(3);
 
 		String status = response.getStatus().name();
@@ -55,8 +69,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	}
 
 	@Override
-	protected JarmilRequest listToRequest(List<String> list)
-			throws IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, IllegalStateException {
+	protected JarmilRequest listToRequest(List<String> list) throws Exception {
 
 		if (list.size() < 3) {
 			throw new IllegalArgumentException("Request need to have at least three parts, but have " + list.size());
@@ -126,7 +139,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 		}
 	}
 
-	private List<Object> deserializeParameters(List<String> list) {
+	private List<Object> deserializeParameters(List<String> list) throws Exception {
 		List<Object> result = new ArrayList<>(list.size() - 3);
 
 		for (String parameter : list.subList(3, list.size())) {
@@ -138,7 +151,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	}
 
 	@Override
-	protected List<String> requestToList(JarmilRequest request) {
+	protected List<String> requestToList(JarmilRequest request) throws Exception {
 		if (request.getObject() == null && request.getClazz() == null) {
 			throw new IllegalStateException("Class and/or object must be specified");
 		}
@@ -180,7 +193,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 		return NO_VALUE;
 	}
 
-	private void serializeParameters(JarmilRequest request, List<String> list) {
+	private void serializeParameters(JarmilRequest request, List<String> list) throws Exception {
 		for (Object parameter : request.getParameters()) {
 			String param = serializer.serialize(parameter);
 			list.add(param);

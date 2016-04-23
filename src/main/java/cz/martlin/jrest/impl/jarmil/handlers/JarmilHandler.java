@@ -10,6 +10,12 @@ import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;
 
+/**
+ * The handler of Jarmil requests.
+ * 
+ * @author martin
+ *
+ */
 public class JarmilHandler implements RequestHandler<JarmilRequest, JarmilResponse> {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -61,14 +67,36 @@ public class JarmilHandler implements RequestHandler<JarmilRequest, JarmilRespon
 		}
 	}
 
+	/**
+	 * Invokes given request's method as static (on given clazz).
+	 * 
+	 * @param clazz
+	 * @param request
+	 * @return
+	 */
 	private JarmilResponse invokeStatic(Class<?> clazz, JarmilRequest request) {
 		return invoke(clazz, null, request);
 	}
 
+	/**
+	 * Invokes given request's method as object's method (on given object).
+	 * 
+	 * @param object
+	 * @param request
+	 * @return
+	 */
 	private JarmilResponse invokeOnObject(Object object, JarmilRequest request) {
 		return invoke(object.getClass(), object, request);
 	}
 
+	/**
+	 * Invokes method.
+	 * 
+	 * @param clazz
+	 * @param object
+	 * @param request
+	 * @return
+	 */
 	private JarmilResponse invoke(Object clazz, Object object, JarmilRequest request) {
 		Object value;
 		try {
@@ -79,13 +107,20 @@ public class JarmilHandler implements RequestHandler<JarmilRequest, JarmilRespon
 		}
 
 		if (value != null) {
-			return JarmilResponse.createNonullOk(value);
+			return JarmilResponse.createNonnullOk(value);
 		} else {
 			Class<?> type = invoker.typeof(clazz, request.getMethod(), request.getParameters());
 			return JarmilResponse.createNullOk(type);
 		}
 	}
 
+	/**
+	 * Updates given environment such that adds a {@link WaiterStopper} and
+	 * {@link Echoer}.
+	 * 
+	 * @param environment
+	 * @return
+	 */
 	private static JarmilEnvironment update(JarmilEnvironment environment) {
 		environment.addObject(WAITER_STOPPER_NAME, new WaiterStopper());
 		environment.addObject(ECHOER_NAME, new Echoer());

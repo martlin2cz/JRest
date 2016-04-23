@@ -9,15 +9,22 @@ import java.util.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
+/**
+ * Very simple serializer of all objects. The primitives are serialized by the
+ * default way, others (the objects) are serialized (so, must implement
+ * Serializable) and then converted to {@link Base64} string.
+ * 
+ * @author martin
+ *
+ */
 public class ValuesSerializer {
 
 	private static final String NULL_STR = "null";
 
 	public ValuesSerializer() {
-		// TODO Auto-generated constructor stub
 	}
 
-	public String serialize(Object value) {
+	public String serialize(Object value) throws Exception {
 		if (value == null) {
 			return NULL_STR;
 		}
@@ -60,11 +67,11 @@ public class ValuesSerializer {
 		}
 	}
 
-	public Object deserialize(String value) {
+	public Object deserialize(String value) throws Exception {
 		return deserialize(value, tryInferType(value));
 	}
 
-	public Object deserialize(String value, Class<?> type) throws IllegalArgumentException {
+	public Object deserialize(String value, Class<?> type) throws Exception {
 		if (NULL_STR.equals(value)) {
 			return null;
 		}
@@ -107,7 +114,7 @@ public class ValuesSerializer {
 		}
 	}
 
-	public Class<?> tryInferType(String value) {
+	public Class<?> tryInferType(String value) throws Exception {
 		if (NULL_STR.equals(value)) {
 			return null;
 		}

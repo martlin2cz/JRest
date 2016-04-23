@@ -1,4 +1,4 @@
-package cz.martlin.jrest.impl.jarmil.reqresp;
+package cz.martlin.jrest.impl.jarmil.handlers;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -12,15 +12,36 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//TODO doc
+/**
+ * An utility which tries to find method by given criteria. The criteria are the
+ * declaring class, name of the method, the list of objects (which must be
+ * method callable with) and static/not static specifier. This class tries to
+ * find exactly one method, else fails.
+ * 
+ * @author martin
+ *
+ */
 public class MethodsFinder {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
 	public MethodsFinder() {
 	}
 
+	/**
+	 * Tries to find method by given arguments. If is not exactly 1 matching
+	 * method found, the exception is thrown.
+	 * 
+	 * @param clazz
+	 * @param name
+	 * @param callableWith
+	 * @param neededNonStatic
+	 * @return
+	 * @throws NoSuchMethodException
+	 * @throws IllegalStateException
+	 */
 	public Method findMethod(Class<?> clazz, String name, List<Object> callableWith, boolean neededNonStatic)
 			throws NoSuchMethodException, IllegalStateException {
+
 		LOG.info("Searching (static? {}) method on class {} of name {} to be called with {}.", !neededNonStatic,
 				clazz.getName(), name, callableWith);
 
@@ -35,12 +56,20 @@ public class MethodsFinder {
 		if (methods.isEmpty()) {
 			throw new NoSuchMethodException("Cannot find the method " + name + " on " + clazz.getName());
 		} else if (methods.size() > 1) {
-			throw new IllegalStateException("Method " + name + " is ambigous");
+			throw new IllegalStateException("Method " + name + " is ambigous, found " + methods.size() + " matching");
 		} else {
 			return methods.iterator().next();
 		}
 	}
 
+	/**
+	 * Filters the given list of methods by the match of arguments types against
+	 * the given objects to be called with.
+	 * 
+	 * @param methods
+	 * @param callableWith
+	 * @return
+	 */
 	private Set<Method> filterByArgs(Set<Method> methods, List<Object> callableWith) {
 		LOG.trace("Removing methods such that cannot be invoked with {}. Removing from: {}", callableWith, methods);
 
@@ -59,6 +88,13 @@ public class MethodsFinder {
 		return result;
 	}
 
+	/**
+	 * Filters the given list of methods by the method name.
+	 * 
+	 * @param methods
+	 * @param name
+	 * @return
+	 */
 	private Set<Method> filterByName(Set<Method> methods, String name) {
 		LOG.trace("Removing methods not named {}. Removing from: ", name, methods);
 
@@ -74,6 +110,13 @@ public class MethodsFinder {
 		return result;
 	}
 
+	/**
+	 * Filters the given list of methods by match to given number of arguments
+	 * 
+	 * @param methods
+	 * @param count
+	 * @return
+	 */
 	private Set<Method> filterByArgsCount(Set<Method> methods, int count) {
 		LOG.trace("Removing methods with no {} arguments. Removing from: {}", count, methods);
 
@@ -89,6 +132,13 @@ public class MethodsFinder {
 		return result;
 	}
 
+	/**
+	 * Filters the given list of methods by static/not static flag.
+	 * 
+	 * @param methods
+	 * @param neededNonstatic
+	 * @return
+	 */
 	private Set<Method> filterByStaticness(Set<Method> methods, boolean neededNonstatic) {
 		LOG.trace("Removing nonstatic? ({}) methods. Removing from: {}", neededNonstatic, methods);
 
@@ -105,6 +155,12 @@ public class MethodsFinder {
 		return result;
 	}
 
+	/**
+	 * Lists all methods of given class.
+	 * 
+	 * @param clazz
+	 * @return
+	 */
 	private Set<Method> allMethods(Class<?> clazz) {
 		LOG.trace("Retrieving all class methods. Of class: {}", clazz.getName());
 
@@ -116,6 +172,12 @@ public class MethodsFinder {
 		return set;
 	}
 
+	/**
+	 * Clear, isn't it? Object -> its type, null -> null. What else?
+	 * 
+	 * @param objects
+	 * @return
+	 */
 	private List<Class<?>> types(List<Object> objects) {
 		List<Class<?>> classes = new ArrayList<>(objects.size());
 
@@ -130,11 +192,25 @@ public class MethodsFinder {
 		return classes;
 	}
 
+	/**
+	 * For given method returns list of its parameter types.
+	 * 
+	 * @param method
+	 * @return
+	 */
 	private List<Class<?>> types(Method method) {
 		List<Class<?>> types = Arrays.asList(method.getParameterTypes());
 		return types;
 	}
 
+	/**
+	 * Returns true if given calee types are null or subtypes of corresponding
+	 * called. Or something like that.
+	 * 
+	 * @param calee
+	 * @param called
+	 * @return
+	 */
 	private boolean matches(List<Class<?>> calee, List<Class<?>> called) {
 		Iterator<Class<?>> caleeIter = calee.iterator();
 		Iterator<Class<?>> calledIter = called.iterator();

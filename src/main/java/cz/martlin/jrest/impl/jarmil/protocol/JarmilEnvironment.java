@@ -5,6 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents the environment of the Jarmil waiter. The guest can requests
+ * <strong>only</strong> the objects/classes which are in the waiter's
+ * environment.
+ * 
+ * Environment compouds of name objects and only classes (with static methods).
+ * 
+ * @author martin
+ *
+ */
 public class JarmilEnvironment {
 	private final Map<String, Object> objects;
 	private final Set<Class<?>> classes;

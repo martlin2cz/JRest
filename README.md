@@ -1,8 +1,5 @@
 # JRest
 
-## Warning
-__Warning:__ this text is outdated, take a look into src/test/java/ into package cz.martlin.test for examples of usage. Will be corrected as soon as I complete the updates I am currently performing.
-
 ## Abstract
 
 JRest is framework which simulates something like restaurant. Also, JRest is the IPC _(inter-process communication)_ (or, if you want, RMI _(remote method invocation)_) java framework.
@@ -13,134 +10,128 @@ The application using the JRest contains three parts. A waiter (takes the role o
 The following diagram shows the principle of the whole framework:
 ```
                                                     !                                 JRestRequest
-[Client app] --------->  [JRestGuest instance]  ---------> [JRestWaiter instance] ---.  instance
-			JRestRequest                         network                             |   
-              instance                              !                                V
-			                                        !                 [CommandHandler instance]  <-----------> ["Server" app]
-                                                    !                                |
-                                                    !                                |  
-[Client app] <---------- [JRestGuest instance] <---------- [JRestWaiter instance] <-'  JRestResponse
-            JRestResponse                        network                                  instance
-              instance                              !
+   [Client app]
+        |
+        | (JRest request)
+        V
+   [JRestGuest]
+        |
+        | (serialized request)
+        V
+  [JRestWaiter]
+        |
+        | (JRest request)
+        V
+ [RequestHandler]           
+        |
+        | (method call)
+        V
+    [Server app]
+        |
+        | (returning value)
+        V 
+ [RequestHandler]
+        |
+        | (JRest response)
+        V
+   [JRestWaiter]
+        |
+        | (serialize request)
+        V             
+    [JRestGuest]
+        |
+        | (JRest request)
+        V             
+    [Client app]
 ```
 
 ## Usage 
+Take a look to package `cz.martlin.jrest.examples` in `src/test/java` to see more examples. Also, take a look to file README-previous-version.md to see more complex (but outdated example application description).
 
-You have a service computing approximations of number pi. The computing takes a long time and the result is little by little closer to real pi value. So, you decide to make a simple "service" app, which runs the computation and on demand gives back the currently computed value. In addition, you would like to add option to start and stop computation by hand.
+Since the version 1.3 thing became much simplier. So, lets start!
 
-This service, class `PiAproxComputer`, will have following methods:
- - `startComputing()`
- - `stopComputing()`
- - `getCurrentPi()`
+Imagine you are implementing some "commons" service. A simple library which should run as service and provide some common things, like generating random numbers of recieving current weather situation.
 
-Once is ready, you will create a requests handler, a class `PiComputerHandler` like this:
+This is the typical usage of JRest (and, in fact, the reason, why I have JRest created). How it will look like?
+
+Firstly, assume we have a class `CommonsService` like this:
+
 ```java
-public class PiComputerHandler implements RequestHandler {
-	private final PiAproxComputer computer;
+public class CommonsService {
+  private final Random rand = new Random();
 
-	public PiComputerHandler(PiAproxComputer computer) {
-		this.computer = computer;
-	}
+  public int getRandomNumber(Integer max) {
+     return rand.nextInt(max);
+  }
+  
+  //some other usefull methods...
 
-	@Override
-	public void initialize(JRestWaiter waiter) throws Exception {
-	}
-
-	@Override
-	public void finish(JRestWaiter waiter) throws Exception {
-	}
-
-	@Override
-	public JRestResponse handle(JRestRequest request) throws Exception {
-	
-		if ("start-computing".equals(request.getCommand())) {
-			computer.startComputing();
-			return JRestResponse.ok("Started");
-		}
-
-		if ("stop-computing".equals(request.getCommand())) {
-			computer.stopComputing();
-			return JRestResponse.ok("Stopped");
-		}
-
-		if ("get-current-pi".equals(request.getCommand())) {
-			String format = request.getArguments().get(0);
-			double d = computer.getCurrentPi();
-			String s = String.format(format, d);
-			return JRestResponse.ok(s);
-		}
-
-		return null;
-	}
 }
 ```
-Now, when you have prepared the handler, you can set up the whole waiter. Create an main class called `PiCalculatorServiceMain` and in the main method type following:
+Now we will make this executable. That means we will create a main class, called `CommonsServiceApp` which will look like:
 ```java
-	final int port = 31415;
-	PiAproxComputer computer = new PiAproxComputer();
-	
-	RequestHandler handler = new PiComputerHandler(computer);
-	WaiterProtocol protocol = new SimpleWaiterProtocolImpl(port, handler);
-	JRestWaiterShift shift = new JRestWaiterShift(protocol);
-	
-	shift.startWaiter();
-```
-If the waiter correctly starts, you can try to send commands via `telnet` (see "Telnet" chapter). Okay, waiter is ready and working. Now lets make a simple console client, class `ConsoleClient`, with following content in main method:
-```java
-	final int port = 31415;
-	
-	GuestProtocol protocol = new SimpleGuestProtocolImpl(port);
-	JRestGuest guest = new JRestGuest(protocol);
-	
-	JRestRequest startReq = new JRestRequest("start-computing");
-	JRestResponse startResp = guest.sendRequest(startReq);
-	
-	Thread.sleep(10 * 1000);
-	
-	JRestRequest getReq = new JRestRequest("get-current-pi", "%1.4f");
-	JRestResponse getResp = guest.sendRequest(startReq);
-	System.out.println("Current value of pi is: " + getResp.getData());
-	
-	Thread.sleep(10 * 1000);
-	
-	JRestRequest stopReq = new JRestRequest("stop-computing");
-	JRestResponse stopResp = guest.sendRequest(stopReq);
-```
-The code does as expected. Sends request to start computing, waits 10 seconds, queries currently computed value, waits next 10 seconds and then stops computing. You would have to handle some exceptions, but it should be no problem.
+public class CommonsServiceApp {
+  public static final int PORT = 2016;
+  public static final String NAME = "commons";
+  public static final CommonsService SERVICE = new CommonsService();
 
-**Note: ** previous example usage is simplified application from package `cz.martlin.jrest.test.pi` in `test` directory. Don't forget to take a look at another two example applications, `cz.martlin.jrest.test.simple` and `cz.martlin.jrest.test.counter`.
+  public static void main(String[] args) {
+    System.out.println("Starting");
+
+    SingleJarmilWaiterShift shift = new SingleJarmilWaiterShift(PORT, NAME, SERVICE);
+
+    shift.startWaiter();
+    System.out.println("Started");
+  }
+}
+```
+
+Compile and run it. If the waiter correctly starts, you can try to send commands via `telnet` (see "Telnet" chapter). Okay, waiter is ready and working. Now lets make a simple console client, class `CommonSimpleClientApp`, with following content in main method:
+```java
+public class CommonSimpleClientApp {
+  public static void main(String[] args) throws JRestException {
+    
+    SingleJarmilGuest guest = new SingleJarmilGuest(//
+      CommonsServiceApp.PORT, 
+	   CommonsServiceApp.NAME,
+	   CommonsServiceApp.SERVICE);
+	
+	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10););
+  }
+}	
+```
+The code does as expected. Sends request to call method on `CommonsServiceApp.SERVICE` instance. Then recieves result and prints. You would have to handle some exceptions, but it should be no problem.
+
 
 #Features
 
 ## Goals
-The goal of JRest was to implement simple & lightweight (in many cases, from usage, over configuration to openness) framework. JRest doesn't want to replace RMI or something like that. It is made to send simple commands between applications, with minimal amount of data ("I just wanted to tell you ...").
+The goal of JRest was to implement simple & lightweight (in many cases, from usage, over configuration to openness) but scaleable and customizable framework. JRest doesn't want to replace RMI or something like that. It is made to send simple commands between applications, with minimal amount of data ("I just wanted to tell you ...").
 
-The whole communication process is constructed as complex of interfaces, with their default implementations. Due the process transparency is JRest open to implement custom components! 
+The whole communication process is constructed as complex of interfaces, with their default implementations. Due the process transparency is JRest open to implement custom components (requests, responses, serializers, handlers, protocols, waiters and guests)! 
 
 ## JRest and Telnet
 Sometimes you don't need to use client to request an waiter. If you know the communication protocol, you can use `telnet` to communicate. In the previous example, you could use something like:
 ```bash
-echo "start-computing" | telnet localhost 31415
-echo "stop-computing" | telnet localhost 31415
+echo '" " commons getRandomNumber 10' | telnet localhost 2016
 ``` 
-to start and stop the computing.
+to generate random number. You can add a logging inside of `CommonsService` to see it.
 
-## Serializers
-The JRest comes with the "simple" request/response serializer implementation, class `ShellLikeSerializer` (the `BasicLinedSerializer` also can be used, but see javadoc to see why not). Feel free to implement custom! For instance, send requests and responses in JSON or xml instead of basic "shell like format".
+## Implementation
+JRest currently comes with two implementation. The old, low lewel and not really prefered Simple and the modern new and comfortable Jarmil. 
 
-## Echo and StopWaiter handlers
-When using simple protocol (`SimpleWaiterProtocolImpl` or `SimpleJRestProtocolImpl`) there are automatically added two additional handlers. The first one is echo handler, class `EchoCommandHandler`, which handles commands with name echo and simply responds the sent arguments back. It's made to use in diagnostics and testing/debugging. The second one is handler, which performs stopping of the waiter (class `StopWaiterCommandHandler`). 
+Simple implementation uses philosophy simillar to unix shell (request contains command name and arguments, and response has status ("error code"), data part ("stdout") and metadata part ("stderr"). The main disadvantage of this implementation is the need of explicit implementation of commands handler. Yea, it is powerfull, but ... makes Jrest complicated.
 
-Just remind that the waiter (if runned in shift) can be stopped "by hand" (by calling of method) directly from the waiter itself.
+So, I implemented new implementation. The new implementation is call Jarmil (__Ja__va __RMI__ __l__ike) and is simillar to RMI (see the example above). 
+
+## Echo and StopWaiter
+Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".  
 
 ## Security note
-Notice that JRest itself does not guarantee the security of the application. When using, be carefull to have blocked (i.e. via firewall) ports used by your JRest application from the outside world. Similarly, when you have to run JRest remotelly, allways think about the security (and use some authorisation token for instance). But remember, the communication is still unsecured, so anyone can catch the socket and read the authorisation data.
+Notice that JRest itself does not guarantee the security of the application. When using, be careful to have blocked (i.e. via firewall) ports used by your JRest application from the outside world. Similarly, when you have to run JRest remotely, always think about the security (and use some authorisation token for instance). But remember, the communication is still unsecured, so anyone can catch the socket and read the authorisation data.
 
-The security is not the priority of the JRest, so, again, be carefull and never let JRest waiter to do something critical.  
+The security is not the priority of the JRest, so, again, be careful and never let JRest waiter to do something critical.  
 
 ## Anything?
 
 Anything else? No, just **enyoy your meal**!
-
-
-

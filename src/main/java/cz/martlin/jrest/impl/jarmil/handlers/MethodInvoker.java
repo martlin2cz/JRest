@@ -7,6 +7,12 @@ import java.util.List;
 
 import cz.martlin.jrest.misc.JRestException;
 
+/**
+ * A utility which simplifies invoking of methods.
+ * 
+ * @author martin
+ *
+ */
 public class MethodInvoker {
 
 	public MethodInvoker() {
@@ -14,12 +20,8 @@ public class MethodInvoker {
 
 	public Object invoke(Object clazz, Object object, Method method, List<Object> parameters) throws JRestException {
 		try {
-			if (parameters.isEmpty()) {
-				return method.invoke(object);
-			} else {
-				Object[] array = new ArrayList<>(parameters).toArray();
-				return method.invoke(object, array);
-			}
+			Object[] array = new ArrayList<>(parameters).toArray();
+			return method.invoke(object, array);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			throw new JRestException("Method invocation failed", e);
 		}

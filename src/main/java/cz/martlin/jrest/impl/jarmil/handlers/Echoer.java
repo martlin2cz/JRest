@@ -3,6 +3,12 @@ package cz.martlin.jrest.impl.jarmil.handlers;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * The class performing echoing to be used by {@link JarmilHandler}.
+ * 
+ * @author martin
+ *
+ */
 public class Echoer {
 
 	public static final String ECHO_METHOD = "echo";

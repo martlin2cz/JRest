@@ -1,15 +1,29 @@
 package cz.martlin.jrest.impl.jarmil.reqresp;
 
-import cz.martlin.jrest.impl.jarmil.handlers.JarmilResponseStatus;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
+/**
+ * Represents response in Jarmil implementation. The response compouds of
+ * status, data and type of data. Note that data can contain thrown exception
+ * (if status is not {@link JarmilResponseStatus#OK}).
+ * 
+ * @author martin
+ *
+ */
 public class JarmilResponse implements JRestAbstractResponse {
 
 	private final JarmilResponseStatus status;
 	private final Object data;
 	private final Class<?> type;
 
+	/**
+	 * If possible use static fatory methods.
+	 * 
+	 * @param status
+	 * @param data
+	 * @param type
+	 */
 	public JarmilResponse(JarmilResponseStatus status, Object data, Class<?> type) {
 		super();
 		this.status = status;
@@ -72,7 +86,7 @@ public class JarmilResponse implements JRestAbstractResponse {
 		return new JarmilResponse(JarmilResponseStatus.OK, value, type);
 	}
 
-	public static JarmilResponse createNonullOk(Object value) {
+	public static JarmilResponse createNonnullOk(Object value) {
 		return new JarmilResponse(JarmilResponseStatus.OK, value, value.getClass());
 	}
 
@@ -95,6 +109,5 @@ public class JarmilResponse implements JRestAbstractResponse {
 	public static JarmilResponse createIvocationError(JRestException e) {
 		return new JarmilResponse(JarmilResponseStatus.INVOCATION_FAILED, e, e.getClass());
 	}
-
 
 }
