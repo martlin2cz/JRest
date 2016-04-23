@@ -1,4 +1,4 @@
-package cz.martlin.jrest.impl.jarmil;
+package cz.martlin.jrest.impl.jarmil.protocol;
 
 import java.util.HashMap;
 import java.util.HashSet;

@@ -1,5 +1,6 @@
-package cz.martlin.jrest.impl.jarmil;
+package cz.martlin.jrest.impl.jarmil.reqresp;
 
+import cz.martlin.jrest.impl.jarmil.handlers.JarmilResponseStatus;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 

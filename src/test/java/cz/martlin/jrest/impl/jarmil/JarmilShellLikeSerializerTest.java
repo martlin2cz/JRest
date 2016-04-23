@@ -9,6 +9,10 @@ import java.util.Collections;
 
 import org.junit.Test;
 
+import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.reqresp.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
 import cz.martlin.jrest.misc.JRestException;
 

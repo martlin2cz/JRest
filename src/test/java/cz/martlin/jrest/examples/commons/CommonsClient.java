@@ -2,61 +2,47 @@ package cz.martlin.jrest.examples.commons;
 
 import java.util.Calendar;
 
-import cz.martlin.jrest.guest.JRestGuest;
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.SingleJarmilGuest;
 import cz.martlin.jrest.impl.jarmil.handlers.Echoer;
 import cz.martlin.jrest.impl.jarmil.handlers.JarmilHandler;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.misc.JRestException;
 
 public class CommonsClient {
 
-	private final JRestGuest<JarmilRequest, JarmilResponse> guest;
+	private final SingleJarmilGuest guest;
 
 	public CommonsClient() {
-		guest = new JRestGuest<>(CommonsServiceApp.PROTOCOL);
+		guest = new SingleJarmilGuest(CommonsServiceApp.PORT, CommonsServiceApp.NAME, CommonsServiceApp.SERVICE);
 	}
 
 	public Calendar getCurrentDate() throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "getCurrentDate");
-		JarmilResponse resp = guest.sendRequest(req);
-
-		return (Calendar) resp.getData();
+		return guest.invoke("getCurrentDate");
 	}
 
 	public int getRandomNumber() throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "getRandomNumber");
-		JarmilResponse resp = guest.sendRequest(req);
-
-		return (Integer) resp.getData();
+		return guest.invoke("getRandomNumber");
 	}
 
 	public int getRandomNumber(int max) throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "getRandomNumber", 10);
-		JarmilResponse resp = guest.sendRequest(req);
+		return guest.invoke("getRandomNumber", max);
+	}
 
-		return (Integer) resp.getData();
+	public int getRandomNumber(int min, int max) throws JRestException {
+		return guest.invoke("getRandomNumber", min, max);
 	}
 
 	public boolean willTomorrowRain() throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "willTomorrowRain");
-		JarmilResponse resp = guest.sendRequest(req);
-
-		return (Boolean) resp.getData();
+		return guest.invoke("willTomorrowRain");
 	}
 
 	public WeatherForecast getWeatherForecast() throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "getWeatherForecast");
-		JarmilResponse resp = guest.sendRequest(req);
-
-		return (WeatherForecast) resp.getData();
+		return guest.invoke("getWeatherForecast");
 	}
 
 	public Exception makeTheWorldPeace() throws JRestException {
-		JarmilRequest req = JarmilRequest.create(CommonsService.class, CommonsService.NAME, "makeTheWorldPeace");
-		JarmilResponse resp = guest.sendRequest(req);
-
-		return (Exception) resp.getData();
+		return guest.invoke("makeTheWorldPeace");
 	}
 
 	public String invokeEcho() throws JRestException {

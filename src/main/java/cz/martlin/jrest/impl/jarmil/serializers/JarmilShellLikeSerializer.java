@@ -7,11 +7,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.martlin.jrest.impl.jarmil.JarmilEnvironment;
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
-import cz.martlin.jrest.impl.jarmil.JarmilResponseStatus;
-import cz.martlin.jrest.impl.jarmil.MethodsFinder;
+import cz.martlin.jrest.impl.jarmil.handlers.JarmilResponseStatus;
+import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.reqresp.MethodsFinder;
 import cz.martlin.jrest.protocol.serializers.BaseShellLikeSerializer;
 
 public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilRequest, JarmilResponse> {

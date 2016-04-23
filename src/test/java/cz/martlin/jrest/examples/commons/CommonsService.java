@@ -6,8 +6,6 @@ import java.util.Random;
 
 public class CommonsService {
 
-	public static final String NAME = "commons";
-
 	private final Random rand = new Random();
 
 	public CommonsService() {
@@ -23,6 +21,10 @@ public class CommonsService {
 
 	public int getRandomNumber(Integer max) {
 		return rand.nextInt(max);
+	}
+
+	public int getRandomNumber(Integer min, Integer max) {
+		return min + rand.nextInt(max - min);
 	}
 
 	public boolean willTomorrowRain() {

@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import cz.martlin.jrest.impl.jarmil.MethodsFinder;
+import cz.martlin.jrest.impl.jarmil.reqresp.MethodsFinder;
 
 public class MethodsFinderTest {
 	private final MethodsFinder accessor = new MethodsFinder();

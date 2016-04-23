@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.martlin.jrest.impl.dflt.protocol.DefaultJRestProtocolImpl;
-import cz.martlin.jrest.impl.jarmil.JarmilEnvironment;
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
 import cz.martlin.jrest.impl.jarmil.handlers.JarmilHandler;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
 import cz.martlin.jrest.protocol.serializer.ReqRespSerializer;
 import cz.martlin.jrest.waiter.RequestHandler;

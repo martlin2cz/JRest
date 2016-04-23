@@ -3,9 +3,9 @@ package cz.martlin.jrest.impl.jarmil.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.martlin.jrest.impl.jarmil.JarmilEnvironment;
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.waiter.JRestWaiter;
 import cz.martlin.jrest.waiter.RequestHandler;

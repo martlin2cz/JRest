@@ -23,16 +23,21 @@ public class CommonSimpleClientApp {
 		LOG.info("Random int (0-10) numbers: {}, {}, {}", //
 				client.getRandomNumber(10), client.getRandomNumber(10), client.getRandomNumber(10));
 
+		LOG.info("Random int (10-15) numbers: {}, {}, {}", //
+				client.getRandomNumber(10, 15), client.getRandomNumber(10, 15), client.getRandomNumber(10, 15));
+
 		LOG.info("Will be raining tomorrow? {}  Complete forecast: {}", //
 				client.willTomorrowRain(), client.getWeatherForecast());
 
-		
-		LOG.error("But making of the world peace will fail", //
-				client.makeTheWorldPeace());
+		try {
+			client.makeTheWorldPeace();
+		} catch (JRestException e) {
+			LOG.error("But making of the world peace will fail", //
+					e);
+		}
 
 		LOG.info("But we can still echo: {}", //
 				client.invokeEcho());
 
-		
 	}
 }

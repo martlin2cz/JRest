@@ -1,10 +1,12 @@
 package cz.martlin.jrest.impl.jarmil.handlers;
 
-import cz.martlin.jrest.impl.jarmil.JarmilRequest;
-import cz.martlin.jrest.impl.jarmil.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.waiter.JRestWaiter;
 
 public class WaiterStopper {
+
+	public static final String METHOD_NAME = "stop";
 
 	private JRestWaiter<JarmilRequest, JarmilResponse> waiter;
 

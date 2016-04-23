@@ -1,4 +1,4 @@
-package cz.martlin.jrest.impl.jarmil;
+package cz.martlin.jrest.impl.jarmil.reqresp;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
