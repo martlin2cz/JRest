@@ -1,11 +1,14 @@
 package cz.martlin.jrest.impl.jarmil.reqresp;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
-import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
-import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.handler.JarmilTarget;
+import cz.martlin.jrest.impl.jarmil.misc.JarmilEnvironment;
+import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
+import cz.martlin.jrest.impl.jarmil.targets.guest.NewObjectOnGuestTarget;
+import cz.martlin.jrest.impl.jarmil.targets.guest.ObjectOnGuestTarget;
+import cz.martlin.jrest.impl.jarmil.targets.guest.StaticClassOnGuestTarget;
 import cz.martlin.jrest.misc.JRestException;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
 
@@ -20,11 +23,8 @@ import cz.martlin.jrest.protocol.reqresp.JRestAbstractRequest;
  */
 public class JarmilRequest implements JRestAbstractRequest {
 
-	private static final MethodsFinder finder = new MethodsFinder();
-
-	private final Class<?> clazz;
-	private final String object;
-	private final Method method;
+	private final TargetOnGuest target;
+	private final String method;
 	private final List<Object> parameters;
 
 	/**
@@ -35,53 +35,18 @@ public class JarmilRequest implements JRestAbstractRequest {
 	 * @param method
 	 * @param parameters
 	 */
-	public JarmilRequest(Class<?> clazz, String object, Method method, List<Object> parameters) {
+	public JarmilRequest(TargetOnGuest target, String method, List<Object> parameters) {
 		super();
-		this.clazz = clazz;
-		this.object = object;
+		this.target = target;
 		this.method = method;
 		this.parameters = parameters;
 	}
 
-	/**
-	 * If possible, use static fatory methods.
-	 * 
-	 * @param clazz
-	 * @param method
-	 * @param parameters
-	 */
-	public JarmilRequest(Class<?> clazz, Method method, List<Object> parameters) {
-		super();
-		this.clazz = clazz;
-		this.object = null;
-		this.method = method;
-		this.parameters = parameters;
+	public TargetOnGuest getTarget() {
+		return target;
 	}
 
-	/**
-	 * If possible, use static fatory methods.
-	 * 
-	 * @param object
-	 * @param method
-	 * @param parameters
-	 */
-	public JarmilRequest(String object, Method method, List<Object> parameters) {
-		super();
-		this.clazz = null;
-		this.object = object;
-		this.method = method;
-		this.parameters = parameters;
-	}
-
-	public Class<?> getClazz() {
-		return clazz;
-	}
-
-	public String getObject() {
-		return object;
-	}
-
-	public Method getMethod() {
+	public String getMethod() {
 		return method;
 	}
 
@@ -93,10 +58,9 @@ public class JarmilRequest implements JRestAbstractRequest {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((clazz == null) ? 0 : clazz.hashCode());
 		result = prime * result + ((method == null) ? 0 : method.hashCode());
-		result = prime * result + ((object == null) ? 0 : object.hashCode());
 		result = prime * result + ((parameters == null) ? 0 : parameters.hashCode());
+		result = prime * result + ((target == null) ? 0 : target.hashCode());
 		return result;
 	}
 
@@ -109,56 +73,110 @@ public class JarmilRequest implements JRestAbstractRequest {
 		if (getClass() != obj.getClass())
 			return false;
 		JarmilRequest other = (JarmilRequest) obj;
-		if (clazz == null) {
-			if (other.clazz != null)
-				return false;
-		} else if (!clazz.equals(other.clazz))
-			return false;
 		if (method == null) {
 			if (other.method != null)
 				return false;
 		} else if (!method.equals(other.method))
-			return false;
-		if (object == null) {
-			if (other.object != null)
-				return false;
-		} else if (!object.equals(other.object))
 			return false;
 		if (parameters == null) {
 			if (other.parameters != null)
 				return false;
 		} else if (!parameters.equals(other.parameters))
 			return false;
+		if (target == null) {
+			if (other.target != null)
+				return false;
+		} else if (!target.equals(other.target))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "JarmilRequest [clazz=" + clazz + ", object=" + object + ", method=" + method + ", parameters="
-				+ parameters + "]";
+		return "JarmilRequest [target=" + target + ", method=" + method + ", parameters=" + parameters + "]";
 	}
 
-	public static JarmilRequest create(Class<?> clazz, String objectName, String methodName, Object... parameters)
-			throws JRestException {
-		List<Object> params = Arrays.asList(parameters);
-		Method meth;
-		try {
-			meth = finder.findMethod(clazz, methodName, params, true);
-		} catch (NoSuchMethodException | IllegalStateException e) {
-			throw new JRestException("Cannot create method on object " + objectName, e);
-		}
-		return new JarmilRequest(clazz, objectName, meth, params);
+	/**
+	 * 
+	 * @param target2
+	 * @param method2
+	 * @param parameters2
+	 * @return
+	 */
+	public static JarmilRequest create(TargetOnGuest target, String methodName, Object[] parameters) {
+		return create(methodName, parameters, target);
 	}
 
-	public static JarmilRequest create(Class<?> clazz, String methodName, Object... parameters) throws JRestException {
+	/**
+	 * 
+	 * @param objectName
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 * @throws JRestException
+	 */
+	public static JarmilRequest createWObjectTarget(String objectName, String methodName, Object... parameters) {
+		return create(methodName, parameters, //
+				ObjectOnGuestTarget.create(objectName));
+	}
+
+	/**
+	 * 
+	 * @param className
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 * @throws JRestException
+	 */
+	public static JarmilRequest createWStaticClassTarget(String className, String methodName, Object... parameters) {
+		return create(methodName, parameters, //
+				StaticClassOnGuestTarget.create(className));
+	}
+
+	/**
+	 * 
+	 * @param clazz
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 * @throws JRestException
+	 */
+	public static JarmilRequest createWStaticClassTarget(Class<? extends JarmilTarget> clazz, String methodName,
+			Object... parameters) {
+		return create(methodName, parameters, //
+				StaticClassOnGuestTarget.create(clazz));
+	}
+
+	/**
+	 * 
+	 * @param className
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 * @throws JRestException
+	 */
+	public static JarmilRequest createWNewObjectTarget(String className, String methodName, Object... parameters) {
+		return create(methodName, parameters, //
+				NewObjectOnGuestTarget.create(className));
+	}
+
+	/**
+	 * 
+	 * @param clazz
+	 * @param methodName
+	 * @param parameters
+	 * @return
+	 * @throws JRestException
+	 */
+	public static JarmilRequest createWNEwObjectClassTarget(Class<? extends JarmilTarget> clazz, String methodName,
+			Object... parameters) {
+		return create(methodName, parameters, //
+				NewObjectOnGuestTarget.create(clazz));
+	}
+
+	private static JarmilRequest create(String methodName, Object[] parameters, TargetOnGuest target) {
 		List<Object> params = Arrays.asList(parameters);
-		Method meth;
-		try {
-			meth = finder.findMethod(clazz, methodName, params, false);
-		} catch (NoSuchMethodException | IllegalStateException e) {
-			throw new JRestException("Cannot create static method", e);
-		}
-		return new JarmilRequest(clazz, null, meth, params);
+		return new JarmilRequest(target, methodName, params);
 	}
 
 }

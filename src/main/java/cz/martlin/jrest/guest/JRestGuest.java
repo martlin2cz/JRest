@@ -32,6 +32,10 @@ public class JRestGuest<RQT extends JRestAbstractRequest, RST extends JRestAbstr
 		log.info("Guest ready");
 	}
 
+	public GuestProtocol<RQT, RST> getProtocol() {
+		return protocol;
+	}
+	
 	/**
 	 * Sends given request to waiter and awaits the response.
 	 * 

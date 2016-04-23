@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
+import cz.martlin.jrest.impl.jarmil.misc.MethodsFinder;
 
 public class MethodsFinderTest {
 	private final MethodsFinder accessor = new MethodsFinder();
@@ -43,7 +43,7 @@ public class MethodsFinderTest {
 		assertEquals(methodE, methodA);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test(expected = NoSuchMethodException.class)
 	public void testAmbiguilty() throws NoSuchMethodException, SecurityException {
 
 		Method methodE = StringBuilder.class.getMethod("append", int.class);

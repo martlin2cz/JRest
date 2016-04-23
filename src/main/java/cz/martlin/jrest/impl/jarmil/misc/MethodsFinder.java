@@ -1,4 +1,4 @@
-package cz.martlin.jrest.impl.jarmil.handlers;
+package cz.martlin.jrest.impl.jarmil.misc;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -37,10 +37,9 @@ public class MethodsFinder {
 	 * @param neededNonStatic
 	 * @return
 	 * @throws NoSuchMethodException
-	 * @throws IllegalStateException
 	 */
 	public Method findMethod(Class<?> clazz, String name, List<Object> callableWith, boolean neededNonStatic)
-			throws NoSuchMethodException, IllegalStateException {
+			throws NoSuchMethodException {
 
 		LOG.info("Searching (static? {}) method on class {} of name {} to be called with {}.", !neededNonStatic,
 				clazz.getName(), name, callableWith);
@@ -56,7 +55,7 @@ public class MethodsFinder {
 		if (methods.isEmpty()) {
 			throw new NoSuchMethodException("Cannot find the method " + name + " on " + clazz.getName());
 		} else if (methods.size() > 1) {
-			throw new IllegalStateException("Method " + name + " is ambigous, found " + methods.size() + " matching");
+			throw new NoSuchMethodException("Method " + name + " is ambigous, found " + methods.size() + " matching");
 		} else {
 			return methods.iterator().next();
 		}

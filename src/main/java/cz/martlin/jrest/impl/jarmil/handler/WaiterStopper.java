@@ -1,4 +1,4 @@
-package cz.martlin.jrest.impl.jarmil.handlers;
+package cz.martlin.jrest.impl.jarmil.handler;
 
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
@@ -10,9 +10,11 @@ import cz.martlin.jrest.waiter.JRestWaiter;
  * @author martin
  *
  */
-public class WaiterStopper {
+public class WaiterStopper implements JarmilTarget {
 
+	public static final String OBJECT_NAME = "waiterStopper";
 	public static final String METHOD_NAME = "stop";
+	private static final String DESCRIPTION = "Performs stopping of waiter, with a method " + METHOD_NAME;
 
 	private JRestWaiter<JarmilRequest, JarmilResponse> waiter;
 
@@ -33,6 +35,11 @@ public class WaiterStopper {
 		if (waiter != null) {
 			waiter.stopWaiter(message);
 		}
+	}
+
+	@Override
+	public String getJarmilTargetDescription() {
+		return DESCRIPTION;
 	}
 
 }

@@ -1,13 +1,14 @@
 package cz.martlin.jrest.impl.jarmil;
 
-import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.protocol.JarmilProtocol;
+import cz.martlin.jrest.impl.jarmil.protocol.JarmilWaiterProtocol;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.waiter.JRestWaiterShift;
 
 /**
  * Implements custom, Jarmil specific, Waiter shift
+ * 
  * @author martin
  *
  */
@@ -17,8 +18,7 @@ public class JarmilWaiterShift extends JRestWaiterShift<JarmilRequest, JarmilRes
 		super(protocol);
 	}
 
-	public JarmilWaiterShift(int port, JarmilEnvironment environment) {
-		super(new JarmilProtocol(port, environment));
+	public JarmilWaiterShift(JarmilWaiterProtocol protocol) {
+		super(protocol);
 	}
-
 }

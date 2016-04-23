@@ -13,6 +13,9 @@ import cz.martlin.jrest.protocol.reqresp.ResponseSerializer;
  */
 public class BaseProtocolImpl<RQT extends JRestAbstractRequest, RST extends JRestAbstractResponse> {
 
+	public static final String DFLT_HOST = "localhost";
+
+	
 	protected final int port;
 
 	protected final RequestSerializer<RQT> requestSerializer;

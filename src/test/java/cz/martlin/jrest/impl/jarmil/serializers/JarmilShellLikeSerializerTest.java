@@ -1,64 +1,46 @@
-package cz.martlin.jrest.impl.jarmil;
+package cz.martlin.jrest.impl.jarmil.serializers;
 
 import static org.junit.Assert.assertEquals;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.Test;
 
-import cz.martlin.jrest.impl.jarmil.handlers.MethodsFinder;
-import cz.martlin.jrest.impl.jarmil.protocol.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
-import cz.martlin.jrest.impl.jarmil.serializers.JarmilShellLikeSerializer;
+import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
+import cz.martlin.jrest.impl.jarmil.targets.guest.ObjectOnGuestTarget;
+import cz.martlin.jrest.impl.jarmil.targets.guest.StaticClassOnGuestTarget;
 import cz.martlin.jrest.misc.JRestException;
 
 public class JarmilShellLikeSerializerTest {
 
 	private static final String LOCALHOST_URL_SERIALIZED = "rO0ABXNyAAxqYXZhLm5ldC5VUkyWJTc2GvzkcgMAB0kACGhhc2hDb2RlSQAEcG9ydEwACWF1dGhvcml0eXQAEkxqYXZhL2xhbmcvU3RyaW5nO0wABGZpbGVxAH4AAUwABGhvc3RxAH4AAUwACHByb3RvY29scQB+AAFMAANyZWZxAH4AAXhw//////////90AAlsb2NhbGhvc3R0AABxAH4AA3QABGh0dHBweA==";
-	private final JarmilShellLikeSerializer serializer = createSerializer();
+	private final JarmilShellLikeSerializer serializer = new JarmilShellLikeSerializer();
 
-	private static JarmilShellLikeSerializer createSerializer() {
-		JarmilEnvironment env = new JarmilEnvironment();
-
-		env.addObject("my-double", 20.57);
-		env.addClass(Collections.class);
-
-		return new JarmilShellLikeSerializer(env);
-	}
-
-	@Test
-	public void testListToResponseListOfString() {
-	}
-
-	@Test
-	public void testResponseToListJarmilResponse() {
-	}
-
-	@Test
-	public void testListToRequestListOfString() {
-	}
-
-	@Test
-	public void testRequestToListJarmilRequest() {
-	}
+	// @Test public void testListToResponseListOfString() {}
+	// @Test public void testResponseToListJarmilResponse() {}
+	// @Test public void testListToRequestListOfString() {}
+	// @Test public void testRequestToListJarmilRequest() {}
 
 	@Test
 	public void testSerializeRequest() throws JRestException, NoSuchMethodException, IllegalStateException {
-		Method method1 = new MethodsFinder().findMethod(Double.class, "toString", Collections.emptyList(), true);
-		JarmilRequest req1 = new JarmilRequest(null, "my-double", method1, Collections.emptyList());
+		TargetOnGuest target1 = ObjectOnGuestTarget.create("my-double");
+		JarmilRequest req1 = new JarmilRequest(target1, "compareTo", Arrays.asList((Object) 0.45));
 
-		String expected1 = "\" \" my-double toString\n";
+		String expected1 = "object my-double compareTo 0.45d\n";
 		String actual1 = serializer.serializeRequest(req1);
 
 		assertEquals(expected1, actual1);
 
-		JarmilRequest req2 = JarmilRequest.create(Collections.class, "emptyList");
+		TargetOnGuest target2 = StaticClassOnGuestTarget.create(Collections.class.getName());
 
-		String expected2 = "java.util.Collections \" \" emptyList\n";
+		JarmilRequest req2 = new JarmilRequest(target2, "emptyList", Collections.emptyList());
+
+		String expected2 = "static java.util.Collections emptyList\n";
 		String actual2 = serializer.serializeRequest(req2);
 
 		assertEquals(expected2, actual2);
@@ -66,17 +48,18 @@ public class JarmilShellLikeSerializerTest {
 
 	@Test
 	public void testDeserializeRequest() throws NoSuchMethodException, IllegalStateException, JRestException {
-		Method method1 = new MethodsFinder().findMethod(Double.class, "toString", Collections.emptyList(), true);
-		String ser1 = "\" \" my-double toString";
+		String ser1 = "object my-double compareTo 0.45d";
 
-		JarmilRequest expected1 = new JarmilRequest(Double.class, "my-double", method1, Collections.emptyList());
+		TargetOnGuest target1 = ObjectOnGuestTarget.create("my-double");
+		JarmilRequest expected1 = new JarmilRequest(target1, "compareTo", Arrays.asList((Object) 0.45));
 		JarmilRequest actual1 = serializer.deserializeRequest(ser1);
 
 		assertEquals(expected1, actual1);
 
-		String ser2 = "java.util.Collections \" \" emptyList";
+		String ser2 = "static java.util.Collections emptyList";
 
-		JarmilRequest expected2 = JarmilRequest.create(Collections.class, "emptyList");
+		TargetOnGuest target2 = StaticClassOnGuestTarget.create(Collections.class.getName());
+		JarmilRequest expected2 = new JarmilRequest(target2, "emptyList", Collections.emptyList());
 		JarmilRequest actual2 = serializer.deserializeRequest(ser2);
 
 		assertEquals(expected2, actual2);

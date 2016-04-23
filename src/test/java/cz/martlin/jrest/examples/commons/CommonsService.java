@@ -4,7 +4,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Random;
 
-public class CommonsService {
+import cz.martlin.jrest.impl.jarmil.handler.JarmilTarget;
+
+public class CommonsService implements JarmilTarget {
 
 	private final Random rand = new Random();
 
@@ -37,5 +39,10 @@ public class CommonsService {
 
 	public void makeTheWorldPeace() {
 		throw new UnsupportedOperationException("World peace not supported");
+	}
+
+	@Override
+	public String getJarmilTargetDescription() {
+		return "Some testing class";
 	}
 }

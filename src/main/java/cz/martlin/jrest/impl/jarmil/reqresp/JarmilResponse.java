@@ -1,6 +1,6 @@
 package cz.martlin.jrest.impl.jarmil.reqresp;
 
-import cz.martlin.jrest.misc.JRestException;
+import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
 import cz.martlin.jrest.protocol.reqresp.JRestAbstractResponse;
 
 /**
@@ -94,19 +94,14 @@ public class JarmilResponse implements JRestAbstractResponse {
 		return new JarmilResponse(JarmilResponseStatus.OK, null, type);
 	}
 
-	public static JarmilResponse createUnknownTarget(String name) {
-		return new JarmilResponse(JarmilResponseStatus.UNKNOWN_TARGET, name, String.class);
+	public static JarmilResponse createUnknownTarget(TargetOnGuest targetOnGuest, String method, Exception e) {
+		String message = "Target specified by identifier " + targetOnGuest.getIdentifier() + "(of type "
+				+ targetOnGuest.getType() + ") or it's method " + method + " not found. Caused by: " + e;
+
+		return new JarmilResponse(JarmilResponseStatus.UNKNOWN_TARGET, message, String.class);
 	}
 
-	public static JarmilResponse createUnknownObjectTarget(String name) {
-		return createUnknownTarget("Could not found object " + name + " or object not supported");
-	}
-
-	public static JarmilResponse createUnknownStaticTarget(Class<?> clazz) {
-		return createUnknownTarget("Could not found class " + clazz + " or class no supported");
-	}
-
-	public static JarmilResponse createIvocationError(JRestException e) {
+	public static JarmilResponse createIvocationError(Exception e) {
 		return new JarmilResponse(JarmilResponseStatus.INVOCATION_FAILED, e, e.getClass());
 	}
 

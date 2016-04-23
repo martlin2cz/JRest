@@ -9,7 +9,6 @@ The application using the JRest contains three parts. A waiter (takes the role o
 ## How it works
 The following diagram shows the principle of the whole framework:
 ```
-                                                    !                                 JRestRequest
    [Client app]
         |
         | (JRest request)
@@ -71,16 +70,17 @@ public class CommonsService {
 Now we will make this executable. That means we will create a main class, called `CommonsServiceApp` which will look like:
 ```java
 public class CommonsServiceApp {
-  public static final int PORT = 2016;
-  public static final String NAME = "commons";
-  public static final CommonsService SERVICE = new CommonsService();
+  private static final int PORT = 2016;
+  private static final String NAME = "commons";
+  private static final CommonsService SERVICE = new CommonsService();
+  public static final SingleJarmilProtocol PROTOCOL = new SingleJarmilProtocol(PORT, NAME, SERVICE);
 
   public static void main(String[] args) {
     System.out.println("Starting");
 
-    SingleJarmilWaiterShift shift = new SingleJarmilWaiterShift(PORT, NAME, SERVICE);
-
+    SingleJarmilWaiterShift shift = new SingleJarmilWaiterShift(PROTOCOL);
     shift.startWaiter();
+    
     System.out.println("Started");
   }
 }
@@ -91,11 +91,8 @@ Compile and run it. If the waiter correctly starts, you can try to send commands
 public class CommonSimpleClientApp {
   public static void main(String[] args) throws JRestException {
     
-    SingleJarmilGuest guest = new SingleJarmilGuest(//
-      CommonsServiceApp.PORT, 
-	   CommonsServiceApp.NAME,
-	   CommonsServiceApp.SERVICE);
-	
+    SingleJarmilGuest guest = new SingleJarmilGuest(CommonsServiceApp.PROTOCOL);
+    
 	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10););
   }
 }	
@@ -122,7 +119,7 @@ JRest currently comes with two implementation. The old, low lewel and not really
 
 Simple implementation uses philosophy simillar to unix shell (request contains command name and arguments, and response has status ("error code"), data part ("stdout") and metadata part ("stderr"). The main disadvantage of this implementation is the need of explicit implementation of commands handler. Yea, it is powerfull, but ... makes Jrest complicated.
 
-So, I implemented new implementation. The new implementation is call Jarmil (__Ja__va __RMI__ __l__ike) and is simillar to RMI (see the example above). 
+So, I implemented new implementation. The new implementation is call Jarmil (**Ja**va **RMI** **l**ike) and is simillar to RMI (see the example above). 
 
 ## Echo and StopWaiter
 Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".  
