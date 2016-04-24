@@ -7,7 +7,7 @@ import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.waiter.JRestWaiterShift;
 
 /**
- * Implements custom, Jarmil specific, Waiter shift
+ * Implements custom, Jarmil specific, Waiter shift.
  * 
  * @author martin
  *

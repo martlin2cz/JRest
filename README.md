@@ -6,10 +6,12 @@ JRest is framework which simulates something like restaurant. Also, JRest is the
 
 The application using the JRest contains three parts. A waiter (takes the role of server), a guest(s) (takes the role of client(s)) and the communication protocol. The guests sends requests to their waiter, he handles and processes them and sends them back responses. The protocol specifies port of communication, encoding of requests and responses and handling of the requests.
 
+Since version 1.2 is JRest more abstract and, in fact, just set of interfaces. Also this project contains two implementations.  
+
 ## How it works
 The following diagram shows the principle of the whole framework:
 ```
-   [Client app]
+[Client app class]
         |
         | (JRest request)
         V
@@ -25,7 +27,7 @@ The following diagram shows the principle of the whole framework:
         |
         | (method call)
         V
-    [Server app]
+[Server app class]
         |
         | (returning value)
         V 
@@ -41,11 +43,11 @@ The following diagram shows the principle of the whole framework:
         |
         | (JRest request)
         V             
-    [Client app]
+[Client app class]
 ```
 
 ## Usage 
-Take a look to package `cz.martlin.jrest.examples` in `src/test/java` to see more examples. Also, take a look to file README-previous-version.md to see more complex (but outdated example application description).
+Take a look to package `cz.martlin.jrest.examples` in `src/test/java` to see more examples. Also, take a look to file README-previous-version.md to see more complex (but outdated example application's description).
 
 Since the version 1.3 thing became much simplier. So, lets start!
 
@@ -67,37 +69,45 @@ public class CommonsService {
 
 }
 ```
+Since we will use the new Jarmil implementation, we need to make our service let implement the `JarmilTarget` interface. So, change the class header to:
+```
+public class CommonsService implements JarmilTarget {
+```
+
 Now we will make this executable. That means we will create a main class, called `CommonsServiceApp` which will look like:
 ```java
 public class CommonsServiceApp {
-  private static final int PORT = 2016;
-  private static final String NAME = "commons";
-  private static final CommonsService SERVICE = new CommonsService();
-  public static final SingleJarmilProtocol PROTOCOL = new SingleJarmilProtocol(PORT, NAME, SERVICE);
+  public static final int PORT = 2016;
+  public static final String NAME = "commons";
 
   public static void main(String[] args) {
     System.out.println("Starting");
 
-    SingleJarmilWaiterShift shift = new SingleJarmilWaiterShift(PROTOCOL);
-    shift.startWaiter();
+    final CommonsService service = new CommonsService();  //create our service object
+	final TargetOnWaiter target = ObjectOnWaiterTarget.create(NAME, service);  //specify how to invoke it
+	final JarmilWaiterProtocol protocol = JarmilWaiterProtocol.createSingle(PORT, target);  //create protocol
+
+	JarmilWaiterShift shift = new JarmilWaiterShift(protocol);
     
     System.out.println("Started");
   }
 }
 ```
 
-Compile and run it. If the waiter correctly starts, you can try to send commands via `telnet` (see "Telnet" chapter). Okay, waiter is ready and working. Now lets make a simple console client, class `CommonSimpleClientApp`, with following content in main method:
+Compile and run it. If the waiter correctly starts, you can try to send commands via `telnet` (see "Telnet" chapter). Okay, waiter is ready and working. Now lets make a simple console client, class `CommonSimpleClientApp`, with following main method:
 ```java
 public class CommonSimpleClientApp {
   public static void main(String[] args) throws JRestException {
     
-    SingleJarmilGuest guest = new SingleJarmilGuest(CommonsServiceApp.PROTOCOL);
+    TargetOnGuest target = ObjectOnGuestTarget.create(CommonsServiceApp.NAME);
+    JarmilGuestProtocol protocol = new JarmilGuestProtocol(CommonsServiceApp.PORT);
+    SingleJarmilGuest guest = new SingleJarmilGuest(target, protocol);
     
-	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10););
+	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10));
   }
 }	
 ```
-The code does as expected. Sends request to call method on `CommonsServiceApp.SERVICE` instance. Then recieves result and prints. You would have to handle some exceptions, but it should be no problem.
+The code does as expected. Sends request to call method on the instance of `CommonsService` created in the `CommonsServiceApp`. Then recieves result and prints.
 
 
 #Features
@@ -107,27 +117,32 @@ The goal of JRest was to implement simple & lightweight (in many cases, from usa
 
 The whole communication process is constructed as complex of interfaces, with their default implementations. Due the process transparency is JRest open to implement custom components (requests, responses, serializers, handlers, protocols, waiters and guests)! 
 
+## Implementations
+JRest currently comes with two implementation. The old, low lewel and not really prefered Simple and the modern, new and comfortable Jarmil. 
+
+Simple implementation uses philosophy simillar to unix shell (request contains command name and arguments, and response has status ("error code"), data part ("stdout") and metadata part ("stderr"). The main disadvantage of this implementation is the need of explicit implementation of commands handler. Yea, it is powerfull, but ... makes JRest complicated (see `counter`, `pi` and `simple` examples).
+
+So, I created new implementation. The new implementation is call Jarmil (**Ja**va **RMI** **l**ike) and is simillar to RMI. See the example above. 
+
 ## JRest and Telnet
 Sometimes you don't need to use client to request an waiter. If you know the communication protocol, you can use `telnet` to communicate. In the previous example, you could use something like:
 ```bash
-echo '" " commons getRandomNumber 10' | telnet localhost 2016
+echo "object commons getRandomNumber 10" | telnet localhost 2016
 ``` 
-to generate random number. You can add a logging inside of `CommonsService` to see it.
+to generate random number. Unfortunatelly, the `telnet` command does not display the response output. So, to verify, you should add some logging into `CommonsService`.
 
-## Implementation
-JRest currently comes with two implementation. The old, low lewel and not really prefered Simple and the modern new and comfortable Jarmil. 
-
-Simple implementation uses philosophy simillar to unix shell (request contains command name and arguments, and response has status ("error code"), data part ("stdout") and metadata part ("stderr"). The main disadvantage of this implementation is the need of explicit implementation of commands handler. Yea, it is powerfull, but ... makes Jrest complicated.
-
-So, I implemented new implementation. The new implementation is call Jarmil (**Ja**va **RMI** **l**ike) and is simillar to RMI (see the example above). 
 
 ## Echo and StopWaiter
-Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".  
+Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".
+
+When using Jarmil, the each Jarmil target has to implement method `getJarmilTargetDescription` which should return simple description about the supported methods. 
 
 ## Security note
 Notice that JRest itself does not guarantee the security of the application. When using, be careful to have blocked (i.e. via firewall) ports used by your JRest application from the outside world. Similarly, when you have to run JRest remotely, always think about the security (and use some authorisation token for instance). But remember, the communication is still unsecured, so anyone can catch the socket and read the authorisation data.
 
-The security is not the priority of the JRest, so, again, be careful and never let JRest waiter to do something critical.  
+The new Jarmil implementation makes security more riskfull. Each guest can invoke **all** the (public) methods of the jarmil target. Althought, it is secured by `JarmilTarget` interface (guest can invoke only methods on classes implementing `JarmilTarget` interface) and environment (only classes provided in waiter's environment can have they're methods invoked). But to avoid invoking on some particular method, you just need to make it private or - simply - comment it out.   
+
+So, again, be careful and never let JRest waiter to do something critical.  
 
 ## Anything?
 

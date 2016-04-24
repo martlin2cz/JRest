@@ -5,10 +5,22 @@ import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 import cz.martlin.jrest.impl.jarmil.targets.WithClassNameOnGuestTarget;
 
+/**
+ * The static class target specifier on the waiter side (corresponding to
+ * {@link TargetType#STATIC}).
+ * 
+ * @author martin
+ *
+ */
 public class StaticClassOnGuestTarget extends WithClassNameOnGuestTarget implements TargetOnGuest {
 
 	private static final long serialVersionUID = 9049495076849442328L;
 
+	/**
+	 * Use factory methods where possible.
+	 * 
+	 * @param className
+	 */
 	protected StaticClassOnGuestTarget(String className) {
 		super(className);
 	}
@@ -24,6 +36,7 @@ public class StaticClassOnGuestTarget extends WithClassNameOnGuestTarget impleme
 	}
 
 	/**
+	 * Creates instance of this specifier of given class name.
 	 * 
 	 * @param className
 	 * @return
@@ -33,6 +46,7 @@ public class StaticClassOnGuestTarget extends WithClassNameOnGuestTarget impleme
 	}
 
 	/**
+	 * Creates instance of this specifier of given class.
 	 * 
 	 * @param clazz
 	 * @return

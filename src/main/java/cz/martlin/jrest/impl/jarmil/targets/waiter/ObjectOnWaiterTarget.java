@@ -9,12 +9,25 @@ import cz.martlin.jrest.impl.jarmil.target.TargetOnWaiter;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 import cz.martlin.jrest.impl.jarmil.targets.guest.ObjectOnGuestTarget;
 
+/**
+ * The target of named object on the waiter side (corresponds to
+ * {@link TargetType#OBJECT}).
+ * 
+ * @author martin
+ *
+ */
 public class ObjectOnWaiterTarget implements TargetOnWaiter {
 	private static final long serialVersionUID = 835350267856384312L;
 
 	private final String name;
 	private final JarmilTarget targetObject;
 
+	/**
+	 * Use factory methods where possible.
+	 * 
+	 * @param name
+	 * @param targetObject
+	 */
 	protected ObjectOnWaiterTarget(String name, JarmilTarget targetObject) {
 		super();
 		this.name = name;
@@ -87,6 +100,7 @@ public class ObjectOnWaiterTarget implements TargetOnWaiter {
 	}
 
 	/**
+	 * Constructr the new instance of given named object.
 	 * 
 	 * @param name
 	 * @param targetObject

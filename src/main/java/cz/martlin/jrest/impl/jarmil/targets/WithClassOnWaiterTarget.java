@@ -4,6 +4,12 @@ import cz.martlin.jrest.impl.jarmil.handler.JarmilTarget;
 import cz.martlin.jrest.impl.jarmil.target.TargetOfInvocation;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 
+/**
+ * The base target class, the target with class.
+ * 
+ * @author martin
+ *
+ */
 public abstract class WithClassOnWaiterTarget implements TargetOfInvocation {
 	private static final long serialVersionUID = -1357415539511404650L;
 

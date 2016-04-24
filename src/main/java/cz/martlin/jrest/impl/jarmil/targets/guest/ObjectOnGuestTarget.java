@@ -3,11 +3,23 @@ package cz.martlin.jrest.impl.jarmil.targets.guest;
 import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 
+/**
+ * The target on the guest side of the one single object (corresponding to
+ * {@link TargetType#OBJECT}).
+ * 
+ * @author martin
+ *
+ */
 public class ObjectOnGuestTarget implements TargetOnGuest {
 	private static final long serialVersionUID = -6931026440028792029L;
 
 	private final String name;
 
+	/**
+	 * Use factory methods where possible.
+	 * 
+	 * @param name
+	 */
 	protected ObjectOnGuestTarget(String name) {
 		this.name = name;
 	}
@@ -55,7 +67,13 @@ public class ObjectOnGuestTarget implements TargetOnGuest {
 	public String toString() {
 		return "ObjectOnGuestTarget [name=" + name + "]";
 	}
-	
+
+	/**
+	 * Creates instance of object target with given object name.
+	 * 
+	 * @param name
+	 * @return
+	 */
 	public static ObjectOnGuestTarget create(String name) {
 		return new ObjectOnGuestTarget(name);
 	}

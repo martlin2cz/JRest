@@ -40,7 +40,7 @@ public class JarmilHandler implements RequestHandler<JarmilRequest, JarmilRespon
 	}
 
 	/**
-	 * Updates given environment such that adds a {@link WaiterStopper} and
+	 * Initializes given environment such that adds a {@link WaiterStopper} and
 	 * {@link Echoer}. The stopper is also set in the {@link #stopper} slot to
 	 * be nextly initialized by {@link #initialize(JRestWaiter)} method.
 	 * 

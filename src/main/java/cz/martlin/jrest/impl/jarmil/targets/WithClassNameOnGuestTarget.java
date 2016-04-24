@@ -3,9 +3,14 @@ package cz.martlin.jrest.impl.jarmil.targets;
 import cz.martlin.jrest.impl.jarmil.target.TargetOfInvocation;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 
+/**
+ * The base class, the Target with className.
+ * @author martin
+ *
+ */
 public abstract class WithClassNameOnGuestTarget implements TargetOfInvocation {
-
 	private static final long serialVersionUID = -1801657162109285704L;
+	
 	private final String className;
 
 	public WithClassNameOnGuestTarget(String className) {

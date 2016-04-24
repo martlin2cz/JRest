@@ -9,9 +9,9 @@ import cz.martlin.jrest.impl.jarmil.target.TargetOnWaiter;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
 
 /**
- * Represents the environment of the Jarmil's JRest. The guest can invoke
- * methods <strong>only</strong> of the targets (classes and objects) given by
- * this environments.
+ * Represents the environment of the Jarmil's JRest waiter. The guest can only
+ * invoke methods <strong>only</strong> of the targets (classes and objects)
+ * given by the waiter's environment.
  * 
  * @author martin
  *

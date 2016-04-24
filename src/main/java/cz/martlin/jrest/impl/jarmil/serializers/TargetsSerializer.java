@@ -8,11 +8,28 @@ import cz.martlin.jrest.impl.jarmil.targets.guest.NewObjectOnGuestTarget;
 import cz.martlin.jrest.impl.jarmil.targets.guest.ObjectOnGuestTarget;
 import cz.martlin.jrest.impl.jarmil.targets.guest.StaticClassOnGuestTarget;
 
+/**
+ * The serializer of targets. Assumes following format:
+ * 
+ * <pre>
+ * [target type specifier] [target identifier] ... (the rest)
+ * </pre>
+ * 
+ * @author martin
+ *
+ */
 public class TargetsSerializer {
 
 	public TargetsSerializer() {
 	}
 
+	/**
+	 * Deserializes the serialized target.
+	 * 
+	 * @param serialized
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	public TargetOnGuest deserialize(List<String> serialized) throws IllegalArgumentException {
 		TargetType type = deserializeType(serialized.get(0));
 
@@ -37,6 +54,12 @@ public class TargetsSerializer {
 		}
 	}
 
+	/**
+	 * Serializes given target by adding into given list.
+	 * 
+	 * @param target
+	 * @param into
+	 */
 	public void serialize(TargetOnGuest target, List<String> into) {
 		String type = target.getType().name().toLowerCase();
 		into.add(type);

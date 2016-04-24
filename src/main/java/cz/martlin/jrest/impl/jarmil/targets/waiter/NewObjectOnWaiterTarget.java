@@ -10,10 +10,22 @@ import cz.martlin.jrest.impl.jarmil.target.TargetType;
 import cz.martlin.jrest.impl.jarmil.targets.WithClassOnWaiterTarget;
 import cz.martlin.jrest.impl.jarmil.targets.guest.NewObjectOnGuestTarget;
 
+/**
+ * Represents the target specifier which creates new objects target instances
+ * (the type {@link TargetType#NEW}).
+ * 
+ * @author martin
+ *
+ */
 public class NewObjectOnWaiterTarget extends WithClassOnWaiterTarget implements TargetOnWaiter {
 
 	private static final long serialVersionUID = 2062698340423903589L;
 
+	/**
+	 * Where possible use the factory methods.
+	 * 
+	 * @param clazz
+	 */
 	protected NewObjectOnWaiterTarget(Class<? extends JarmilTarget> clazz) {
 		super(clazz);
 	}
@@ -43,6 +55,8 @@ public class NewObjectOnWaiterTarget extends WithClassOnWaiterTarget implements 
 	}
 
 	/**
+	 * Creates instance of target specifier creating new instances of given
+	 * class.
 	 * 
 	 * @param clazz
 	 * @return

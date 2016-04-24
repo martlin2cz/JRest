@@ -6,6 +6,11 @@ import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 import cz.martlin.jrest.impl.jarmil.target.TargetOnWaiter;
 
+/**
+ * The Waiter Jarmil protocol.
+ * @author martin
+ *
+ */
 public class JarmilWaiterProtocol extends DefaultWaiterProtocolImpl<JarmilRequest, JarmilResponse> {
 
 	public JarmilWaiterProtocol(int port, JarmilEnvironment environment) {

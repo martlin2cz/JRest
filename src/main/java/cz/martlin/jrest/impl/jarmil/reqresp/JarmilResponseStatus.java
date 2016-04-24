@@ -13,7 +13,7 @@ public enum JarmilResponseStatus {
 	OK,
 
 	/**
-	 * Cannot find target (class/object).
+	 * Cannot find target (class/object) or method.
 	 */
 	UNKNOWN_TARGET,
 

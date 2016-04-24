@@ -10,6 +10,7 @@ import cz.martlin.jrest.impl.jarmil.misc.JarmilEnvironment;
 import cz.martlin.jrest.impl.jarmil.misc.MethodsFinder;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
+import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponseStatus;
 import cz.martlin.jrest.impl.jarmil.target.TargetOnGuest;
 import cz.martlin.jrest.impl.jarmil.target.TargetOnWaiter;
 import cz.martlin.jrest.impl.jarmil.target.TargetType;
@@ -17,6 +18,14 @@ import cz.martlin.jrest.impl.jarmil.targets.waiter.NewObjectOnWaiterTarget;
 import cz.martlin.jrest.impl.jarmil.targets.waiter.ObjectOnWaiterTarget;
 import cz.martlin.jrest.impl.jarmil.targets.waiter.StaticClassOnWaiterTarget;
 
+/**
+ * Class performing the requests. Finds target specified by request, invokes
+ * specified method and generates corresponding response (
+ * {@link JarmilResponseStatus#OK} if suceeds and other if somehow fails).
+ * 
+ * @author martin
+ *
+ */
 public class JarmilRequestsPerformer {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -30,6 +39,13 @@ public class JarmilRequestsPerformer {
 		this.environment = environment;
 	}
 
+	/**
+	 * Performs the given request (invokes its method on its target with its
+	 * parameters).
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public JarmilResponse perform(JarmilRequest request) {
 		LOG.info("Performing request: " + request);
 
@@ -78,7 +94,7 @@ public class JarmilRequestsPerformer {
 			StaticClassOnWaiterTarget scowt = (StaticClassOnWaiterTarget) waiterTarget;
 			return scowt.getClazz();
 		default:
-			throw new IllegalArgumentException("Unknown target type" + waiterTarget.getType());
+			throw new IllegalArgumentException("Unknown target type: " + waiterTarget.getType());
 		}
 	}
 

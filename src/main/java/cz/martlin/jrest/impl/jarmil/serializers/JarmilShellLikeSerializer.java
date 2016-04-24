@@ -16,7 +16,7 @@ import cz.martlin.jrest.protocol.serializers.BaseShellLikeSerializer;
  * Uses the following format (for request and response):
  * 
  * <pre>
- * [target specifier] [method] [arg 1] ... [arg n]
+ * [target type] [target identifier] [method] [arg 1] ... [arg n]
  * [status] [value] [type]
  * </pre>
  * 

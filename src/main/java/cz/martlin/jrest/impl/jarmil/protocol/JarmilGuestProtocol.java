@@ -4,6 +4,11 @@ import cz.martlin.jrest.impl.dflt.protocol.DefaultGuestProtocolImpl;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilRequest;
 import cz.martlin.jrest.impl.jarmil.reqresp.JarmilResponse;
 
+/**
+ * The guest protocol of Jarmil.
+ * @author martin
+ *
+ */
 public class JarmilGuestProtocol extends DefaultGuestProtocolImpl<JarmilRequest, JarmilResponse> {
 
 	public JarmilGuestProtocol(int port) {
