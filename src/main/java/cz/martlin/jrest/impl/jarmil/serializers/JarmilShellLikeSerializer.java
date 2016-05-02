@@ -35,7 +35,7 @@ public class JarmilShellLikeSerializer extends BaseShellLikeSerializer<JarmilReq
 	protected JarmilResponse listToResponse(List<String> list) throws Exception {
 
 		JarmilResponseStatus status = JarmilResponseStatus.valueOf(list.get(0));
-		Class<?> type = Class.forName(list.get(2));
+		Class<?> type = values.deserializeType(list.get(2));
 		Object data = values.deserialize(list.get(1), type);
 
 		return new JarmilResponse(status, data, type);

@@ -53,8 +53,8 @@ public class SingleJarmilGuest extends JarmilGuest {
 			throw new JRestException("Method invocation failed", e);
 		}
 		case UNKNOWN_TARGET: {
-			Exception e = (Exception) response.getData();
-			throw new JRestException("Unknown target/method", e);
+			String err = (String) response.getData();
+			throw new JRestException("Unknown target/method: " + err);
 		}
 		default: {
 			throw new JRestException("Unknown status " + response.getStatus());
