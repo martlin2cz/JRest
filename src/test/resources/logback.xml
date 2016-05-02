@@ -2,16 +2,8 @@
 <configuration>
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-		<target>System.err</target>
 		<encoder>
 			<pattern>%date{dd.MM.yyyy HH:mm:ss} [%level] from %logger{15} in %thread: - %message%n%xException{10}</pattern>
-		</encoder>
-	</appender>
-
-	<appender name="EXAMPLES_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-		<target>System.out</target>
-		<encoder>
-			<pattern>%n%date{HH:mm:ss} [%level] from %logger{15}:%n  %message%n%xException{10}%n</pattern>
 		</encoder>
 	</appender>
 
@@ -24,19 +16,12 @@
 	<logger name="cz.martlin.jrest.waiter.JRestWaiter" level="INFO" />
 	<logger name="cz.martlin.jrest.waiter.JRestServer" level="INFO" />
 	<logger name="cz.martlin.jrest.waiter.WaiterSuicider" level="WARN" />
-
+	
 	<logger name="cz.martlin.jrest.guest.JRestGuest" level="DEBUG" />
 	<logger name="cz.martlin.jrest.guest.JRestClient" level="TRACE" />
+	
 
-	<logger name="cz.martlin.jrest.impl" level="INFO" />
-
-
-	<logger name="cz.martlin.jrest.examples" level="INFO">
-		<appender-ref ref="EXAMPLES_CONSOLE" />
-	</logger>
-
-
-
-
+	<logger name="cz.martlin.jrest.examples" level="INFO" />
+	
 
 </configuration>
