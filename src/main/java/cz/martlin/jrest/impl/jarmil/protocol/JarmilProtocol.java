@@ -21,14 +21,32 @@ import cz.martlin.jrest.waiter.RequestHandler;
  */
 public class JarmilProtocol extends DefaultJRestProtocolImpl<JarmilRequest, JarmilResponse> {
 
+<<<<<<< HEAD
 	public static final ReqRespSerializer<JarmilRequest, JarmilResponse> SERIALIZER = new JarmilShellLikeSerializer();
+=======
+	private final JarmilEnvironment environment;
+>>>>>>> branch 'master' of https://github.com/martlin2cz/JRest.git
 
 	public JarmilProtocol(int port, String host, JarmilEnvironment environment) {
+<<<<<<< HEAD
 		super(port, host, SERIALIZER, initHandler(environment));
+=======
+		super(port, host, initSerializer(environment), initHandler(environment));
+		this.environment = environment;
+>>>>>>> branch 'master' of https://github.com/martlin2cz/JRest.git
 	}
 
 	public JarmilProtocol(int port, JarmilEnvironment environment) {
+<<<<<<< HEAD
 		super(port, DFLT_HOST, SERIALIZER, initHandler(environment));
+=======
+		super(port, DFLT_HOST, initSerializer(environment), initHandler(environment));
+		this.environment = environment;
+	}
+
+	public JarmilEnvironment getEnvironment() {
+		return environment;
+>>>>>>> branch 'master' of https://github.com/martlin2cz/JRest.git
 	}
 
 	public static List<RequestHandler<JarmilRequest, JarmilResponse>> initHandler(JarmilEnvironment environment) {

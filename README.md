@@ -11,7 +11,7 @@ Since version 1.2 is JRest more abstract and, in fact, just set of interfaces. A
 ## How it works
 The following diagram shows the principle of the whole framework:
 ```
-[Client app class]
+[Client app]
         |
         | (JRest request)
         V
@@ -79,6 +79,10 @@ Now we will make this executable. That means we will create a main class, called
 public class CommonsServiceApp {
   public static final int PORT = 2016;
   public static final String NAME = "commons";
+  private static final int PORT = 2016;
+  private static final String NAME = "commons";
+  private static final CommonsService SERVICE = new CommonsService();
+  public static final SingleJarmilProtocol PROTOCOL = new SingleJarmilProtocol(PORT, NAME, SERVICE);
 
   public static void main(String[] args) {
     System.out.println("Starting");
@@ -87,7 +91,9 @@ public class CommonsServiceApp {
 	final TargetOnWaiter target = ObjectOnWaiterTarget.create(NAME, service);  //specify how to invoke it
 	final JarmilWaiterProtocol protocol = JarmilWaiterProtocol.createSingle(PORT, target);  //create protocol
 
+    SingleJarmilWaiterShift shift = new SingleJarmilWaiterShift(PROTOCOL);
 	JarmilWaiterShift shift = new JarmilWaiterShift(protocol);
+    
     
     System.out.println("Started");
   }
@@ -104,6 +110,9 @@ public class CommonSimpleClientApp {
     SingleJarmilGuest guest = new SingleJarmilGuest(target, protocol);
     
 	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10));
+    SingleJarmilGuest guest = new SingleJarmilGuest(CommonsServiceApp.PROTOCOL);
+    
+	System.out.println("Random number: " + guest.invoke("getRandomNumber", 10););
   }
 }	
 ```
@@ -136,6 +145,10 @@ to generate random number. Unfortunatelly, the `telnet` command does not display
 Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".
 
 When using Jarmil, the each Jarmil target has to implement method `getJarmilTargetDescription` which should return simple description about the supported methods. 
+So, I implemented new implementation. The new implementation is call Jarmil (**Ja**va **RMI** **l**ike) and is simillar to RMI (see the example above). 
+
+## Echo and StopWaiter
+Both old Simple and new Jarmil implementation has two featuring handlers, the "echo" and "StopWaiter". Echo just simply responds given input, so it is good for testing and debugging. The StopWaiter allows to stop the waiter instance "from the outside world".  
 
 ## Security note
 Notice that JRest itself does not guarantee the security of the application. When using, be careful to have blocked (i.e. via firewall) ports used by your JRest application from the outside world. Similarly, when you have to run JRest remotely, always think about the security (and use some authorisation token for instance). But remember, the communication is still unsecured, so anyone can catch the socket and read the authorisation data.
