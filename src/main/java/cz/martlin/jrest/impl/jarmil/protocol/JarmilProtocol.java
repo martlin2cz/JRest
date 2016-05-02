@@ -41,7 +41,7 @@ public class JarmilProtocol extends DefaultJRestProtocolImpl<JarmilRequest, Jarm
 	}
 
 	/**
-	 * 
+	 * Creates "single" protocol (with only one target, except thoose two defaulting) of given params.
 	 * @param port
 	 * @param target
 	 * @return
@@ -52,7 +52,7 @@ public class JarmilProtocol extends DefaultJRestProtocolImpl<JarmilRequest, Jarm
 	}
 
 	/**
-	 * 
+	 * Creates "single" protocol (with only one target, except thoose two defaulting) of given params.
 	 * @param port
 	 * @param host
 	 * @param target

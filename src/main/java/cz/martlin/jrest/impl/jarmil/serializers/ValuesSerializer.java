@@ -106,17 +106,25 @@ public class ValuesSerializer {
 		if (type.isEnum()) {
 			return deserializeEnum(value, type);
 		}
-
-		try {
-			return deserializeObject(value);
-		} catch (Exception e) {
-			throw new IllegalArgumentException("Cannot serialize object " + value, e);
+		
+		if (Object.class.isAssignableFrom(type)) {
+			try {
+				return deserializeObject(value);
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Cannot serialize object " + value, e);
+			}
 		}
+
+		throw new IllegalArgumentException("Unsupported type: " + type);
 	}
 
 	public Class<?> tryInferType(String value) throws Exception {
 		if (NULL_STR.equals(value)) {
 			return null;
+		}
+
+		if (value.endsWith("=")) {
+			return Object.class;
 		}
 
 		if (value.matches("^\"(.*)\"$")) {
@@ -143,7 +151,12 @@ public class ValuesSerializer {
 			return Integer.class;
 		}
 
-		return Object.class;
+		if (value.matches("[a-zA-Z0-9_]+")) {
+			// everything else (with no spaces)
+			return Enum.class;
+		}
+
+		throw new IllegalArgumentException("Unspecifieable type of value: " + value);
 	}
 
 	private <T extends Enum<T>> Object deserializeEnum(String value, Class<?> type) {
@@ -189,6 +202,38 @@ public class ValuesSerializer {
 
 		}
 
+	}
+
+	public Class<?> deserializeType(String string) throws ClassNotFoundException {
+		if ("void".equals(string)) {
+			return void.class;
+		}
+		if ("int".equals(string)) {
+			return int.class;
+		}
+		if ("short".equals(string)) {
+			return short.class;
+		}
+		if ("long".equals(string)) {
+			return long.class;
+		}
+		if ("byte".equals(string)) {
+			return byte.class;
+		}
+		if ("char".equals(string)) {
+			return char.class;
+		}
+		if ("boolean".equals(string)) {
+			return boolean.class;
+		}
+		if ("float".equals(string)) {
+			return float.class;
+		}
+		if ("double".equals(string)) {
+			return double.class;
+		}
+
+		return Class.forName(string);
 	}
 
 }
